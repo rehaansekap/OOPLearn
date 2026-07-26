@@ -175,7 +175,14 @@ Route::middleware(['auth'])->group(function () {
     Route::view('/fase3', 'fase3')->name('fase3');
     Route::get('/fase4', [BlueprintController::class, 'enkapsulasi'])->name('fase4');
     Route::view('/fase4baru', 'fase4baru')->name('fase4baru');
-    Route::view('/fase5', 'fase5')->name('fase5');
+    Route::get('/fase5', function () {
+        $fase2 = \App\Models\Fase2Jawaban::where('user_id', Auth::id())
+            ->where('pertemuan', 1)
+            ->latest()
+            ->first();
+
+        return view('fase5', ['jawabanFase2' => $fase2?->jawaban]);
+    })->name('fase5');
 
     /*
     |--------------------------------------------------------------------------
@@ -238,7 +245,13 @@ Route::middleware(['auth'])->group(function () {
         return redirect()->route('fase2');
     })->name('fase1.complete');
 
-    Route::post('/fase2/complete', function () {
+    Route::post('/fase2/complete', function (Request $request) {
+        \App\Models\Fase2Jawaban::create([
+            'user_id'   => Auth::id(),
+            'pertemuan' => 1,
+            'jawaban'   => json_decode($request->input('jawaban'), true),
+        ]);
+
         $p = \App\Models\LearningProgress::firstOrCreate(['user_id' => Auth::id()]);
         $p->fase1 = true; $p->fase2 = true;
         $p->save();
@@ -420,6 +433,17 @@ Route::middleware(['auth'])->group(function () {
 
         return back()->with('success_password', 'Kata sandi berhasil diperbarui.');
     })->name('profil.password');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Product Tour (Onboarding)
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post('/tour/complete', function () {
+        auth()->user()->update(['has_seen_tour' => true]);
+        return response()->noContent();
+    })->name('tour.complete');
 
 });
 

@@ -58,6 +58,7 @@
 
         @foreach($menuItems as $item)
         <button @click="page = '{{ $item['key'] }}'; if(window.innerWidth < 1024) sidebarOpen = false"
+                id="tour-menu-{{ $item['key'] }}"
                 class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-all group"
                 :class="[
                     sidebarOpen ? '' : 'justify-center px-0',

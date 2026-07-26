@@ -89,7 +89,16 @@
                 </div>
 
                 {{-- Video --}}
-                @if($materi->video_path)
+                @if($materi->embedUrl())
+                <div class="mb-5 rounded-xl overflow-hidden bg-black">
+                    <iframe class="w-full" style="aspect-ratio:16/9"
+                            src="{{ $materi->embedUrl() }}"
+                            title="{{ $materi->title }}"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen></iframe>
+                </div>
+                @elseif($materi->video_path)
                 <div class="mb-5 rounded-xl overflow-hidden bg-black">
                     <video controls class="w-full max-h-72" style="aspect-ratio:16/9">
                         <source src="{{ Storage::url($materi->video_path) }}" type="video/mp4">

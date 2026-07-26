@@ -24,7 +24,7 @@
     <main class="flex-1 flex flex-col overflow-hidden">
 
         @include('_navbar', ['navTitle' => 'Fase 5 – Refleksi'])
-        <div class="flex-1 overflow-y-auto p-8" x-data="{ jawaban: '', refleksi: '', submitted: false }">
+        <div class="flex-1 overflow-y-auto p-8" x-data="{ jawaban: '', refleksi: '', tingkatKetepatan: '', submitted: false }">
 
         {{-- Phase badge --}}
         <div class="flex items-center gap-3 mb-6">
@@ -45,7 +45,7 @@
             <div>
                 <p class="text-xs font-bold uppercase tracking-wide text-blue-700 mb-2">Tujuan Pembelajaran</p>
                 <ul class="space-y-1 text-sm text-blue-900">
-                    <li class="flex gap-2"><span class="text-blue-400 font-bold shrink-0">✓</span> Mengevaluasi pemahaman konsep enkapsulasi melalui soal post-test pilihan ganda</li>
+                    <li class="flex gap-2"><span class="text-blue-400 font-bold shrink-0">✓</span> Mengevaluasi pemahaman konsep enkapsulasi melalui satu soal pengecekan pemahaman</li>
                     <li class="flex gap-2"><span class="text-blue-400 font-bold shrink-0">✓</span> Merefleksikan perubahan pemahaman sebelum dan sesudah mengikuti pembelajaran</li>
                 </ul>
             </div>
@@ -56,11 +56,13 @@
               @submit.prevent="
                   if (!jawaban) { alert('Pilih salah satu jawaban terlebih dahulu.'); return; }
                   if (!refleksi.trim()) { alert('Isi kolom refleksi terlebih dahulu.'); return; }
+                  if (!tingkatKetepatan) { alert('Pilih tingkat ketepatan terlebih dahulu.'); return; }
                   $el.submit();
               ">
             @csrf
             <input type="hidden" name="jawaban"  :value="jawaban">
             <input type="hidden" name="refleksi" :value="refleksi">
+            <input type="hidden" name="tingkat_ketepatan" :value="tingkatKetepatan">
 
             <div class="grid grid-cols-12 gap-6">
 
@@ -119,14 +121,24 @@
 
                         <div class="flex items-center gap-3 mb-5">
                             <span class="bg-[#3d943d] text-white w-9 h-9 rounded-xl flex items-center justify-center font-black text-base">2</span>
-                            <span class="text-gray-400 font-semibold text-xs uppercase tracking-widest">Refleksi Tertulis</span>
+                            <span class="text-gray-400 font-semibold text-xs uppercase tracking-widest">Bandingkan dengan Ide Awalmu</span>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-xl p-5 mb-5 border border-gray-200">
+                            <p class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">📝 Gagasan Awalmu di Fase 2</p>
+                            @if($jawabanFase2)
+                                <p class="text-sm text-gray-700 italic mb-1">"{{ $jawabanFase2[2] ?? '-' }}"</p>
+                                <p class="text-xs text-gray-400 mt-2">Tingkat keyakinanmu waktu itu: {{ $jawabanFase2[3] ?? '-' }}</p>
+                            @else
+                                <p class="text-sm text-gray-400 italic">Jawaban Fase 2 tidak ditemukan untuk pertemuan ini</p>
+                            @endif
                         </div>
 
                         <h2 class="text-xl font-bold text-gray-800 mb-2 leading-snug">
-                            Apa yang terjadi jika data dalam sebuah class tidak dienkapsulasi?
+                            Setelah menyelesaikan pembelajaran ini, apakah gagasan awalmu itu sudah tepat? Apa yang berubah dari pemahamanmu?
                         </h2>
                         <p class="text-gray-500 text-sm mb-5">
-                            Jelaskan dengan kata-katamu sendiri berdasarkan pemahaman yang kamu dapat dari materi ini.
+                            Jelaskan dengan kata-katamu sendiri, bandingkan dengan apa yang sudah kamu terapkan di Fase 4.
                         </p>
 
                         <textarea
@@ -139,9 +151,25 @@
                                 : 'border-gray-200 focus:border-[#3d943d] focus:ring-2 focus:ring-green-100'">
                         </textarea>
 
-                        <div class="flex justify-between mt-2">
+                        <div class="flex justify-between mt-2 mb-5">
                             <span class="text-xs text-gray-400" x-text="refleksi.trim().length + ' karakter'"></span>
                             <span class="text-xs text-gray-400">Minimal 20 karakter</span>
+                        </div>
+
+                        <p class="text-sm font-semibold text-gray-700 mb-3">Seberapa tepat gagasan awalmu dibanding yang kamu terapkan?</p>
+                        <div class="space-y-2">
+                            <label class="flex items-center gap-3 border-2 rounded-xl p-3 cursor-pointer" :class="tingkatKetepatan === 'sangat_berbeda' ? 'border-[#3d943d] bg-[#eef7ee]' : 'border-gray-200'">
+                                <input type="radio" class="hidden" name="_tk_visual" value="sangat_berbeda" x-model="tingkatKetepatan">
+                                <span class="text-sm text-gray-700">Sangat berbeda dari yang kubayangkan</span>
+                            </label>
+                            <label class="flex items-center gap-3 border-2 rounded-xl p-3 cursor-pointer" :class="tingkatKetepatan === 'sebagian_tepat' ? 'border-[#3d943d] bg-[#eef7ee]' : 'border-gray-200'">
+                                <input type="radio" class="hidden" name="_tk_visual" value="sebagian_tepat" x-model="tingkatKetepatan">
+                                <span class="text-sm text-gray-700">Sebagian sudah tepat, sebagian meleset</span>
+                            </label>
+                            <label class="flex items-center gap-3 border-2 rounded-xl p-3 cursor-pointer" :class="tingkatKetepatan === 'sangat_tepat' ? 'border-[#3d943d] bg-[#eef7ee]' : 'border-gray-200'">
+                                <input type="radio" class="hidden" name="_tk_visual" value="sangat_tepat" x-model="tingkatKetepatan">
+                                <span class="text-sm text-gray-700">Sudah sangat sesuai dugaan awalku</span>
+                            </label>
                         </div>
 
                     </div>
@@ -210,11 +238,15 @@
                                 <span x-text="refleksi.trim().length >= 20 ? '✓' : '○'" class="font-black w-5"></span>
                                 <span>Refleksi tertulis (min. 20 karakter)</span>
                             </div>
+                            <div class="flex items-center gap-2" :class="tingkatKetepatan ? 'text-green-600' : 'text-gray-400'">
+                                <span x-text="tingkatKetepatan ? '✓' : '○'" class="font-black w-5"></span>
+                                <span>Tingkat ketepatan dipilih</span>
+                            </div>
                         </div>
 
                         <button id="submitBtn" type="submit"
                                 class="w-full py-4 rounded-xl font-black text-base transition-all duration-200 shadow-sm"
-                                :class="jawaban && refleksi.trim().length >= 20
+                                :class="jawaban && refleksi.trim().length >= 20 && tingkatKetepatan
                                     ? 'bg-[#3d943d] hover:bg-green-700 text-white shadow-green-100 hover:shadow-md active:scale-95'
                                     : 'bg-gray-100 text-gray-400 cursor-not-allowed'">
                             Kirim Refleksi →

@@ -119,84 +119,38 @@
         const questions = [
 
             {
-                question: "Bagaimana cara kita melindungi barang berharga di dunia nyata?",
-
-                options: [
-                    "Brankas",
-                    "Dompet",
-                    "Gembok",
-                    "Lainnya"
-                ],
-
-                correct: ["Brankas", "Gembok"],
-
-                correctFeedback:
-                    "✅ Benar! Barang berharga biasanya dilindungi menggunakan alat keamanan tertentu.",
-
-                wrongFeedback:
-                    "⚠️ Kurang tepat. Coba pikirkan kembali alat yang benar-benar digunakan untuk keamanan."
+                type: "text",
+                question: "Bagaimana caranya barang berharga di dunia nyata dilindungi dari orang lain? Coba hubungkan dengan masalah akun1.saldo = -1000 tadi.",
+                placeholder: "Tulis gagasanmu di sini... "
             },
 
             {
-                question: "Kalau data pribadi di internet bocor, apa yang mungkin terjadi?",
-
-                options: [
-                    "Akun diretas",
-                    "Data dicuri",
-                    "Privasi terganggu",
-                    "Semua benar"
-                ],
-
-                correct: ["Semua benar"],
-
-                correctFeedback:
-                    "✅ Tepat! Kebocoran data dapat menyebabkan akun diretas, data dicuri, dan privasi terganggu.",
-
-                wrongFeedback:
-                    "⚠️ Kurang tepat. Kebocoran data bisa menyebabkan banyak masalah."
+                type: "text",
+                question: "Menurutmu, kenapa kode akun1.saldo = -1000 di Fase 1 tadi bisa berhasil dijalankan?",
+                placeholder: "Tulis dugaanmu..."
             },
 
             {
-                question: "Manakah yang termasuk data pribadi?",
-
-                options: [
-                    "Password",
-                    "Nomor telepon",
-                    "Alamat rumah",
-                    "Semua benar"
-                ],
-
-                correct: ["Semua benar"],
-
-                correctFeedback:
-                    "✅ Benar! Semua informasi tersebut termasuk data pribadi.",
-
-                wrongFeedback:
-                    "⚠️ Kurang tepat. Data pribadi mencakup informasi penting seseorang."
+                type: "text",
+                question: "Kalau kamu jadi programmer bank itu, apa yang akan kamu lakukan supaya kejadian itu tidak terulang?",
+                placeholder: "Tulis solusi menurut versimu..."
             },
 
             {
-                question: "Apa yang sebaiknya dilakukan agar akun tetap aman?",
-
+                type: "single",
+                question: "Seberapa yakin kamu dengan jawabanmu tadi?",
                 options: [
-                    "Menggunakan password kuat",
-                    "Membagikan password",
-                    "Menggunakan password sama",
-                    "Menulis password di media sosial"
-                ],
-
-                correct: ["Menggunakan password kuat"],
-
-                correctFeedback:
-                    "✅ Benar! Password kuat membantu melindungi akun.",
-
-                wrongFeedback:
-                    "⚠️ Kurang tepat. Password harus dijaga dan dibuat kuat."
+                    "Yakin",
+                    "Ragu-ragu",
+                    "Cuma menebak"
+                ]
             }
 
         ];
 
         let currentQuestion = 0;
+
+        let jawabanSiswa = [];
 
         const questionTitle = document.getElementById('question-title');
 
@@ -227,51 +181,107 @@
             nextBtn.className =
                 "bg-gray-300 text-white px-10 py-4 rounded-xl font-bold text-xl flex items-center gap-3 transition-all";
 
-            q.options.forEach(option => {
+            if (q.type === 'text') {
 
-                const card = document.createElement('button');
+                optionsContainer.className = "mb-10";
 
-                card.className =
-                    "option-card border border-gray-200 rounded-2xl h-40 text-2xl font-bold bg-white hover:bg-[#eef6ea]";
+                const wrap = document.createElement('div');
+                wrap.className = "relative";
 
-                card.innerText = option;
+                const label = document.createElement('p');
+                label.className = "flex items-center gap-2 text-sm font-bold text-gray-500 mb-2";
+                label.innerHTML = `<span>💭</span> Jawabanmu`;
 
-                card.onclick = () => selectAnswer(card, option);
+                const textarea = document.createElement('textarea');
+                textarea.rows = 6;
+                textarea.placeholder = q.placeholder;
+                textarea.className =
+                    "w-full bg-gray-50 border-2 border-gray-200 rounded-2xl p-6 pb-10 text-lg leading-relaxed placeholder:text-gray-400 focus:outline-none focus:bg-white focus:border-[#5eb15e] focus:ring-4 focus:ring-[#5eb15e]/10 transition resize-none";
 
-                optionsContainer.appendChild(card);
-            });
+                const counter = document.createElement('span');
+                counter.className =
+                    "absolute bottom-4 right-5 text-xs font-bold px-2.5 py-1 rounded-full bg-gray-200 text-gray-500 transition-colors";
+                counter.innerText = "0 / 10";
+
+                textarea.oninput = () => {
+                    const len = textarea.value.trim().length;
+                    counter.innerText = `${len} / 10`;
+                    counter.className =
+                        "absolute bottom-4 right-5 text-xs font-bold px-2.5 py-1 rounded-full transition-colors " +
+                        (len >= 10 ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-500");
+                    handleTextInput(textarea.value);
+                };
+
+                wrap.appendChild(label);
+                wrap.appendChild(textarea);
+                wrap.appendChild(counter);
+                optionsContainer.appendChild(wrap);
+
+            } else {
+
+                optionsContainer.className = "grid grid-cols-1 md:grid-cols-2 gap-8 mb-10";
+
+                q.options.forEach(option => {
+
+                    const card = document.createElement('button');
+
+                    card.className =
+                        "option-card border border-gray-200 rounded-2xl h-40 text-2xl font-bold bg-white hover:bg-[#eef6ea]";
+
+                    card.innerText = option;
+
+                    card.onclick = () => selectSingleOption(card, option);
+
+                    optionsContainer.appendChild(card);
+                });
+            }
         }
 
-        function selectAnswer(card, selected) {
+        function showRecordedFeedback() {
+
+            feedbackBox.classList.remove('hidden');
+
+            feedbackBox.className =
+                "bg-blue-50 border-l-4 border-blue-400 rounded-2xl p-5 text-lg leading-relaxed mb-10";
+
+            feedbackBox.innerHTML =
+                "📝 Jawabanmu sudah dicatat. Nanti kita akan bahas bersama di fase berikutnya!";
+
+            nextBtn.disabled = false;
+
+            nextBtn.className =
+                "btn-pulse bg-[#5eb15e] hover:bg-green-700 text-white px-10 py-4 rounded-xl font-bold text-xl flex items-center gap-3 transition-all shadow-lg";
+        }
+
+        function handleTextInput(value) {
+
+            jawabanSiswa[currentQuestion] = value;
+
+            if (value.trim().length >= 10) {
+
+                showRecordedFeedback();
+
+            } else {
+
+                feedbackBox.classList.add('hidden');
+
+                nextBtn.disabled = true;
+
+                nextBtn.className =
+                    "bg-gray-300 text-white px-10 py-4 rounded-xl font-bold text-xl flex items-center gap-3 transition-all";
+            }
+        }
+
+        function selectSingleOption(card, selected) {
 
             document.querySelectorAll('.option-card')
                 .forEach(btn => btn.classList.remove('active'));
 
             card.classList.add('active');
 
-            const q = questions[currentQuestion];
+            jawabanSiswa[currentQuestion] = selected;
 
-            feedbackBox.classList.remove('hidden');
-
-            if (q.correct.includes(selected)) {
-
-                feedbackBox.className =
-                    "bg-green-100 border-l-4 border-green-600 rounded-2xl p-5 text-lg leading-relaxed mb-10";
-
-                feedbackBox.innerHTML = q.correctFeedback;
-
-            } else {
-
-                feedbackBox.className =
-                    "bg-orange-100 border-l-4 border-orange-500 rounded-2xl p-5 text-lg leading-relaxed mb-10";
-
-                feedbackBox.innerHTML = q.wrongFeedback;
-            }
-
-            nextBtn.disabled = false;
-
-            nextBtn.className =
-                "btn-pulse bg-[#5eb15e] hover:bg-green-700 text-white px-10 py-4 rounded-xl font-bold text-xl flex items-center gap-3 transition-all shadow-lg";
+            showRecordedFeedback();
         }
 
         nextBtn.onclick = () => {
@@ -284,34 +294,24 @@
 
     }else{
 
-        quizBox.innerHTML = `
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{{ route('fase2.complete') }}";
 
-            <div class="flex flex-col items-center justify-center h-full text-center">
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = "{{ csrf_token() }}";
 
-                <h1 class="text-5xl font-extrabold mb-8 text-[#5f8f45]">
-                    🎉 Fase 2 Selesai!
-                </h1>
+        const jawabanInput = document.createElement('input');
+        jawabanInput.type = 'hidden';
+        jawabanInput.name = 'jawaban';
+        jawabanInput.value = JSON.stringify(jawabanSiswa);
 
-                <p class="text-2xl text-gray-700 max-w-3xl leading-relaxed mb-12">
-                    Sekarang kamu memahami bahwa data digital juga membutuhkan perlindungan seperti barang berharga di dunia nyata.
-                </p>
-
-                <form method="POST" action="{{ route('fase2.complete') }}">
-                    @csrf
-
-                    <button
-                        type="submit"
-                        class="btn-pulse bg-[#5eb15e] hover:bg-green-700 text-white px-12 py-5 rounded-xl font-bold text-2xl transition-all">
-
-                        Lanjut ke Fase 3 →
-
-                    </button>
-
-                </form>
-
-            </div>
-
-        `;
+        form.appendChild(csrfInput);
+        form.appendChild(jawabanInput);
+        document.body.appendChild(form);
+        form.submit();
 
     }
 

@@ -10,6 +10,10 @@ class AssessmentSeeder extends Seeder
 {
     public function run(): void
     {
+        if (AssessmentQuestion::exists()) {
+            return;
+        }
+
         $now = now();
 
         AssessmentQuestion::insert([

@@ -58,12 +58,14 @@
                 'routes' => ['assessment', 'pretest', 'posttest'],
                 'label'  => 'Assessment',
                 'icon'   => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4',
+                'tourId' => 'tour-nav-assessment',
             ],
             [
                 'route'  => 'lesson',
                 'routes' => ['lesson'],
                 'label'  => 'Materi',
                 'icon'   => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
+                'tourId' => 'tour-nav-materi',
             ],
 
         ];
@@ -72,6 +74,7 @@
         @foreach($navItems as $item)
             @php $active = request()->routeIs(...$item['routes']); @endphp
             <a href="{{ route($item['route']) }}"
+               id="{{ $item['tourId'] ?? '' }}"
                class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm font-medium transition-all duration-150 group
                       {{ $active
                           ? 'bg-green-50 text-green-700'
@@ -97,7 +100,8 @@
             $anyAct = $anyP1 || $anyP2 || $anyP3;
         @endphp
         <details {{ $anyAct ? 'open' : '' }} class="group/act">
-            <summary class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm font-medium cursor-pointer list-none transition-all duration-150
+            <summary id="tour-nav-activity"
+                     class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm font-medium cursor-pointer list-none transition-all duration-150
                             {{ $anyAct ? 'bg-green-50 text-green-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}"
                      :class="sidebarOpen ? '' : 'justify-center px-0'"
                      title="Activity">
@@ -221,6 +225,7 @@
         {{-- Hasil Belajar --}}
         @php $gradeActive = request()->routeIs('grade'); @endphp
         <a href="{{ route('grade') }}"
+           id="tour-nav-grade"
            class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm font-medium transition-all duration-150 group
                   {{ $gradeActive ? 'bg-green-50 text-green-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}"
            :class="sidebarOpen ? '' : 'justify-center px-0'"

@@ -18,10 +18,11 @@ class MateriController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'title'   => 'required|string|max:200',
-            'content' => 'nullable|string',
-            'color'   => 'required|in:green,blue,purple,indigo,amber',
-            'video'   => 'nullable|file|mimes:mp4,webm,ogg,mov|max:204800',
+            'title'     => 'required|string|max:200',
+            'content'   => 'nullable|string',
+            'color'     => 'required|in:green,blue,purple,indigo,amber',
+            'video'     => 'nullable|file|mimes:mp4,webm,ogg,mov|max:204800',
+            'video_url' => 'nullable|url|max:500',
         ]);
 
         $videoPath = null;
@@ -33,6 +34,7 @@ class MateriController extends Controller
             'title'      => $data['title'],
             'content'    => $data['content'] ?? null,
             'video_path' => $videoPath,
+            'video_url'  => $data['video_url'] ?? null,
             'color'      => $data['color'],
             'sort_order' => (Materi::max('sort_order') ?? 0) + 1,
         ]);
@@ -48,6 +50,7 @@ class MateriController extends Controller
             'content'      => 'nullable|string',
             'color'        => 'required|in:green,blue,purple,indigo,amber',
             'video'        => 'nullable|file|mimes:mp4,webm,ogg,mov|max:204800',
+            'video_url'    => 'nullable|url|max:500',
             'remove_video' => 'nullable|boolean',
         ]);
 
@@ -65,6 +68,7 @@ class MateriController extends Controller
             'title'      => $data['title'],
             'content'    => $data['content'] ?? null,
             'video_path' => $videoPath,
+            'video_url'  => $data['video_url'] ?? null,
             'color'      => $data['color'],
         ]);
 

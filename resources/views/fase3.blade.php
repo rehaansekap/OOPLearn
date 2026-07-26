@@ -65,6 +65,38 @@
             to   { opacity:1; transform: translateX(0)      scale(1);    }
         }
         .snap-in { animation: snapIn 0.2s ease; }
+
+        /* Mapping modal (pola sama dgn .acc-modal di blueprint/builder.blade.php) */
+        @keyframes fadeSlide {
+            from { opacity:0; transform: translateY(8px) scale(0.98); }
+            to   { opacity:1; transform: translateY(0)    scale(1);    }
+        }
+        .mapping-modal {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.72);
+            z-index: 500; align-items: center; justify-content: center; padding: 20px;
+        }
+        .mapping-modal.open { display: flex; }
+        .mapping-modal-box {
+            background: #0f172a; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px;
+            padding: 20px; width: 100%; max-width: 720px; max-height: 85vh;
+            animation: fadeSlide 0.2s ease;
+        }
+        .mapping-item {
+            display: flex; align-items: center; gap: 8px; padding: 10px 12px;
+            border-radius: 8px; border-left: 3px solid transparent;
+            color: rgba(255,255,255,0.6); font-size: 12px; font-weight: 700; cursor: default;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
+        .mapping-item.active {
+            background: rgba(255,171,25,0.12); border-left-color: #FFAB19; color: #FFAB19;
+        }
+        .code-line {
+            display: block; padding: 1px 8px; border-radius: 4px; border-left: 3px solid transparent;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .code-line.active {
+            background: rgba(255,171,25,0.12); border-left-color: #FFAB19;
+        }
     </style>
 </head>
 
@@ -141,6 +173,49 @@
                 </div>
             </div>
 
+            {{-- Studi Kasus --}}
+            <div class="mb-6" data-aos="fade-up">
+                <div class="flex items-start gap-4 mb-4">
+                    <div class="text-4xl leading-none mt-0.5 select-none">🏦</div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-1">Studi Kasus: Sistem Rekening Bank Digital</h3>
+                        <p class="text-sm text-orange-600 font-medium">Ingat masalah di Fase 1?</p>
+                    </div>
+                </div>
+
+                <p class="text-gray-700 text-sm leading-relaxed mb-4">
+                    Pada Fase 1, kamu melihat bagaimana saldo rekening bisa diubah sembarangan menjadi
+                    <code class="bg-gray-100 px-1.5 py-0.5 rounded text-red-600 font-mono text-xs">akun1.saldo = -1000</code>
+                    karena atributnya bersifat publik. Sekarang saatnya memperbaikinya!
+                    Bank tempatmu bekerja meminta kamu menyusun class <strong class="text-gray-900">BankAccount</strong>
+                    yang aman, dengan ketentuan berikut:
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="bg-purple-50 border border-purple-100 rounded-xl p-4">
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <span class="text-lg">🔒</span>
+                            <span class="text-xs font-bold text-purple-800">Saldo bersifat private</span>
+                        </div>
+                        <p class="text-xs text-purple-600 leading-relaxed">Tidak boleh diubah langsung dari luar class, harus lewat method khusus.</p>
+                    </div>
+                    <div class="bg-orange-50 border border-orange-100 rounded-xl p-4">
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <span class="text-lg">🔁</span>
+                            <span class="text-xs font-bold text-orange-800">Sediakan getter &amp; setter</span>
+                        </div>
+                        <p class="text-xs text-orange-600 leading-relaxed"><code class="text-[11px]">get_saldo()</code> untuk membaca, <code class="text-[11px]">set_saldo()</code> untuk mengubah nilai saldo dengan aman.</p>
+                    </div>
+                    <div class="bg-green-50 border border-green-100 rounded-xl p-4">
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <span class="text-lg">✅</span>
+                            <span class="text-xs font-bold text-green-800">Data terlindungi</span>
+                        </div>
+                        <p class="text-xs text-green-600 leading-relaxed">Kasus saldo -1000 seperti di Fase 1 tidak akan terjadi lagi.</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- ══ SCRATCH-LIKE BLOCK PROGRAMMING ═════════════════════════════ -->
             <div class="flex gap-4" style="min-height:520px;">
 
@@ -184,6 +259,14 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"/>
                                 </svg>
                                 Nilai / Return
+                            </button>
+
+                            <button class="cat-btn" id="cat-kondisi" onclick="setCategory('kondisi')"
+                                    style="color:rgba(255,255,255,0.45);background:transparent;">
+                                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v4m0 0l-5 5m5-5l5 5M7 13v4a2 2 0 002 2h6a2 2 0 002-2v-4"/>
+                                </svg>
+                                Kondisi
                             </button>
 
                         </div>
@@ -304,16 +387,76 @@
                     </div>
                 </div>
 
-                <form method="POST" action="{{ route('fase3.complete') }}">
-                    @csrf
-                    <button type="submit"
-                            class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition shadow-sm whitespace-nowrap">
-                        Selanjutnya: Fase 4 – Aplikasi
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                        </svg>
+                <div class="flex items-center gap-3">
+                    <button type="button" onclick="openMappingView()"
+                            class="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-4 py-2.5 rounded-xl font-semibold text-sm transition shadow-sm whitespace-nowrap">
+                        🔍 Lihat Kode Python
                     </button>
-                </form>
+
+                    <form method="POST" action="{{ route('fase3.complete') }}">
+                        @csrf
+                        <button type="submit"
+                                class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition shadow-sm whitespace-nowrap">
+                            Selanjutnya: Fase 4 – Aplikasi
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            {{-- ── MODAL: Pemetaan Blok ke Sintaks Python ──────────────────── --}}
+            <div id="mappingModal" class="mapping-modal" onclick="if(event.target===this) closeMappingView()">
+                <div class="mapping-modal-box" style="overflow:hidden;display:flex;flex-direction:column;">
+
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-shrink:0;">
+                        <div>
+                            <p style="color:white;font-size:15px;font-weight:800;">🔍 Pemetaan Blok ke Sintaks Python</p>
+                            <p style="color:#64748b;font-size:11.5px;margin-top:2px;">Arahkan kursor ke kategori atau baris kode untuk melihat pasangannya</p>
+                        </div>
+                        <button onclick="closeMappingView()"
+                                style="font-size:13px;color:#475569;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:4px 10px;cursor:pointer;font-weight:600;">
+                            ✕ Tutup
+                        </button>
+                    </div>
+
+                    <div style="display:flex;gap:16px;overflow:hidden;">
+
+                        {{-- Kolom kiri: kategori blok --}}
+                        <div style="width:200px;flex-shrink:0;display:flex;flex-direction:column;gap:4px;">
+                            <div class="mapping-item" data-map-id="struktur-class"
+                                 onmouseenter="highlightPair('struktur-class')" onmouseleave="clearHighlight()">
+                                📦 Struktur Class
+                            </div>
+                            <div class="mapping-item" data-map-id="akses-data"
+                                 onmouseenter="highlightPair('akses-data')" onmouseleave="clearHighlight()">
+                                🔒 Akses Data
+                            </div>
+                            <div class="mapping-item" data-map-id="method"
+                                 onmouseenter="highlightPair('method')" onmouseleave="clearHighlight()">
+                                ⚡ Method
+                            </div>
+                            <div class="mapping-item" data-map-id="nilai-return"
+                                 onmouseenter="highlightPair('nilai-return')" onmouseleave="clearHighlight()">
+                                ↩️ Nilai / Return
+                            </div>
+                        </div>
+
+                        {{-- Kolom kanan: kode Python acuan --}}
+                        <div style="flex:1;min-width:0;background:#0a101e;border-radius:10px;padding:14px 16px;overflow-y:auto;">
+                            <pre style="margin:0;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.9;color:#e2e8f0;"><code
+><span class="code-line" data-map-id="struktur-class" onmouseenter="highlightPair('struktur-class')" onmouseleave="clearHighlight()">class BankAccount:</span>
+<span class="code-line" data-map-id="struktur-class" onmouseenter="highlightPair('struktur-class')" onmouseleave="clearHighlight()">    def __init__(self):</span>
+<span class="code-line" data-map-id="akses-data" onmouseenter="highlightPair('akses-data')" onmouseleave="clearHighlight()">        self.__saldo = 0</span>
+<span class="code-line" data-map-id="method" onmouseenter="highlightPair('method')" onmouseleave="clearHighlight()">    def get_saldo(self):</span>
+<span class="code-line" data-map-id="nilai-return" onmouseenter="highlightPair('nilai-return')" onmouseleave="clearHighlight()">        return self.__saldo</span>
+<span class="code-line" data-map-id="method" onmouseenter="highlightPair('method')" onmouseleave="clearHighlight()">    def set_saldo(self, jumlah):</span>
+<span class="code-line" data-map-id="akses-data" onmouseenter="highlightPair('akses-data')" onmouseleave="clearHighlight()">        self.__saldo = jumlah</span></code></pre>
+                        </div>
+
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -504,10 +647,14 @@ const BLOCKS = {
         { id:'assign', label:'self.__saldo = v',    icon:'✏️', color:'#15803d', tag:'Assign' },
         { id:'print',  label:'print(self.__saldo)', icon:'🖨️', color:'#166534', tag:'Print'  },
     ],
+    kondisi: [
+        { id:'if',   label:'if v < 0:', icon:'🔀', color:'#FFAB19', tag:'If'   },
+        { id:'else', label:'else:',     icon:'↪️', color:'#E6960E', tag:'Else' },
+    ],
 };
 
 const CAT_COLORS = {
-    struktur:'#4C97FF', akses:'#9333ea', method:'#ea580c', nilai:'#16a34a',
+    struktur:'#4C97FF', akses:'#9333ea', method:'#ea580c', nilai:'#16a34a', kondisi:'#FFAB19',
 };
 
 let wsItems    = [];
@@ -684,6 +831,29 @@ function runProgram() {
         document.getElementById('outSuccess').style.display = 'none';
         document.getElementById('lanjutBox').style.display  = 'none';
     }
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// MAPPING VIEW (Blok ↔ Sintaks Python — visualisasi statis, bukan generator)
+// ═════════════════════════════════════════════════════════════════════════════
+
+function openMappingView() {
+    document.getElementById('mappingModal').classList.add('open');
+}
+
+function closeMappingView() {
+    document.getElementById('mappingModal').classList.remove('open');
+    clearHighlight();
+}
+
+function highlightPair(mapId) {
+    document.querySelectorAll(`[data-map-id="${mapId}"]`)
+        .forEach(el => el.classList.add('active'));
+}
+
+function clearHighlight() {
+    document.querySelectorAll('.mapping-item.active, .code-line.active')
+        .forEach(el => el.classList.remove('active'));
 }
 
 // ═════════════════════════════════════════════════════════════════════════════

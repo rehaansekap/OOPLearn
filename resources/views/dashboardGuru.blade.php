@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Guru</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/driver.js@1.3.1/dist/driver.js.iife.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/driver.js@1.3.1/dist/driver.css">
     <style>
         body { font-family: 'Inter', sans-serif; }
         [x-cloak] { display: none !important; }
@@ -68,7 +71,13 @@
                  x-transition:enter-start="opacity-0 translate-y-2"
                  x-transition:enter-end="opacity-100 translate-y-0">
 
-                <h2 class="text-2xl font-extrabold text-gray-800 mb-6">Statistik Pembelajaran</h2>
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-extrabold text-gray-800">Statistik Pembelajaran</h2>
+                    <button type="button" onclick="startTour()"
+                            class="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-indigo-700 hover:bg-indigo-50 px-2.5 py-1.5 rounded-lg transition">
+                        ❓ Tour
+                    </button>
+                </div>
 
                 @php
                     $avgPct = $siswas->count()
@@ -85,7 +94,7 @@
                     })->count();
                 @endphp
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div id="tour-stats" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
 
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
                         <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
@@ -126,7 +135,7 @@
                 </div>
 
                 {{-- Ringkasan progress per siswa --}}
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div id="tour-siswa-list" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                     <h3 class="font-semibold text-gray-700 text-sm mb-4">Ringkasan Progress Siswa</h3>
                     <div class="space-y-3">
                         @forelse($siswas as $siswa)
@@ -345,8 +354,14 @@
                                         <option value="amber">Kuning</option>
                                     </select>
                                 </div>
+                                <div class="mb-4">
+                                    <label class="block text-xs font-medium text-gray-600 mb-1">Link YouTube</label>
+                                    <input type="url" name="video_url" placeholder="https://www.youtube.com/watch?v=..."
+                                           class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-indigo-400 bg-white">
+                                    <p class="text-[11px] text-gray-400 mt-1">Kalau diisi, ini yang akan ditampilkan (lebih diprioritaskan daripada upload file di bawah).</p>
+                                </div>
                                 <div class="mb-5">
-                                    <label class="block text-xs font-medium text-gray-600 mb-1">Video Pembelajaran</label>
+                                    <label class="block text-xs font-medium text-gray-600 mb-1">atau Upload Video</label>
                                     <input type="file" name="video" accept="video/mp4,video/webm,video/ogg,video/quicktime"
                                            class="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border file:border-gray-200 file:text-xs file:font-medium file:bg-gray-50 file:text-gray-600 hover:file:bg-gray-100 file:transition cursor-pointer">
                                     <p class="text-[11px] text-gray-400 mt-1">MP4, WebM, MOV · Maks. 200 MB</p>
@@ -390,8 +405,14 @@
                                         <option value="amber">Kuning</option>
                                     </select>
                                 </div>
+                                <div class="mb-4">
+                                    <label class="block text-xs font-medium text-gray-600 mb-1">Link YouTube</label>
+                                    <input type="url" name="video_url" value="{{ $m->video_url }}" placeholder="https://www.youtube.com/watch?v=..."
+                                           class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-indigo-400 bg-white">
+                                    <p class="text-[11px] text-gray-400 mt-1">Kalau diisi, ini yang akan ditampilkan (lebih diprioritaskan daripada upload file di bawah). Kosongkan untuk menghapus link YouTube.</p>
+                                </div>
                                 <div class="mb-5">
-                                    <label class="block text-xs font-medium text-gray-600 mb-1">Video Pembelajaran</label>
+                                    <label class="block text-xs font-medium text-gray-600 mb-1">atau Upload Video</label>
                                     @if($m->video_path)
                                     <p class="text-xs text-gray-500 mb-1.5">Video saat ini: <span class="font-medium">{{ basename($m->video_path) }}</span></p>
                                     <label class="inline-flex items-center gap-1.5 text-xs text-gray-500 mb-2 cursor-pointer">
@@ -471,7 +492,9 @@
                                         @endif
                                     </td>
                                     <td class="px-4 py-3 text-center">
-                                        @if($materi->video_path)
+                                        @if($materi->video_url)
+                                            <span class="text-xs text-green-600 font-medium">YouTube</span>
+                                        @elseif($materi->video_path)
                                             <span class="text-xs text-green-600 font-medium">Ada</span>
                                         @else
                                             <span class="text-xs text-gray-300">—</span>
@@ -960,6 +983,66 @@
     </main>
 
 </div>
+
+<script>
+    function buildGuruTour() {
+        return window.driver.js.driver({
+            showProgress: true,
+            nextBtnText: 'Lanjut',
+            prevBtnText: 'Kembali',
+            doneBtnText: 'Selesai',
+            steps: [
+                { element: '#tour-stats', popover: {
+                    title: '📊 Statistik Ringkas',
+                    description: 'Ringkasan performa seluruh siswa: total siswa, progress rata-rata, dan yang sudah selesai belajar.',
+                    side: 'bottom' } },
+                { element: '#tour-siswa-list', popover: {
+                    title: '📋 Ringkasan Progress Siswa',
+                    description: 'Lihat progress belajar tiap siswa secara individual di sini.',
+                    side: 'top' } },
+                { element: '#tour-menu-data-siswa', popover: {
+                    title: '👥 Data Siswa',
+                    description: 'Lihat detail semua siswa dalam bentuk tabel.',
+                    side: 'right' } },
+                { element: '#tour-menu-data-nilai', popover: {
+                    title: '📈 Data Nilai',
+                    description: 'Pantau nilai pretest, posttest, dan gain tiap siswa — bisa juga di-export ke Excel/CSV.',
+                    side: 'right' } },
+                { element: '#tour-menu-materi', popover: {
+                    title: '📖 Kelola Materi',
+                    description: 'Tambah atau ubah materi pembelajaran OOP di sini.',
+                    side: 'right' } },
+                { element: '#tour-menu-assessment', popover: {
+                    title: '📝 Kelola Assessment',
+                    description: 'Atur soal pretest/posttest dan batas waktu pengerjaan.',
+                    side: 'right' } },
+                { element: '#tour-menu-akun', popover: {
+                    title: '👤 Akun Guru',
+                    description: 'Kelola profil akun kamu di sini.',
+                    side: 'right' } },
+            ],
+            onDestroyed: () => markTourSeen(),
+        });
+    }
+
+    function markTourSeen() {
+        fetch("{{ route('tour.complete') }}", {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+            },
+        });
+    }
+
+    function startTour() {
+        buildGuruTour().drive();
+    }
+
+    @if(!auth()->user()->has_seen_tour)
+    document.addEventListener('DOMContentLoaded', () => startTour());
+    @endif
+</script>
 
 </body>
 </html>

@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard – OOP Learn</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/driver.js@1.3.1/dist/driver.js.iife.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/driver.js@1.3.1/dist/driver.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -27,7 +30,7 @@
         <div class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
 
             {{-- Welcome Header --}}
-            <div class="relative rounded-2xl overflow-hidden mb-6"
+            <div id="tour-welcome" class="relative rounded-2xl overflow-hidden mb-6"
                  style="background: linear-gradient(135deg, #16a34a 0%, #15803d 40%, #166534 100%);">
                 {{-- Decorative circles --}}
                 <div class="absolute -top-8 -right-8 w-40 h-40 rounded-full opacity-10" style="background:white"></div>
@@ -112,10 +115,14 @@
             </div>
 
             {{-- Tahapan Pembelajaran --}}
-            <div class="mb-6" x-data="{ tab: {{ !$p2Unlocked ? 1 : (!$p3Unlocked ? 2 : 3) }} }">
+            <div id="tour-tahapan" class="mb-6" x-data="{ tab: {{ !$p2Unlocked ? 1 : (!$p3Unlocked ? 2 : 3) }} }">
 
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-sm font-bold text-gray-800">Tahapan Pembelajaran</h3>
+                    <button type="button" onclick="startTour()"
+                            class="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-green-700 hover:bg-green-50 px-2.5 py-1.5 rounded-lg transition">
+                        ❓ Tour
+                    </button>
                 </div>
 
                 {{-- Tab Buttons --}}
@@ -269,7 +276,7 @@
             </div>
 
             {{-- Quick Links --}}
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div id="tour-quicklinks" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <a href="{{ route('assessment') }}"
                    class="bg-white rounded-xl border border-gray-200 px-4 py-3.5 flex items-center justify-between hover:border-gray-300 transition group">
                     <div>
@@ -307,6 +314,66 @@
         </div>
     </main>
 </div>
+
+<script>
+    function buildSiswaTour() {
+        return window.driver.js.driver({
+            showProgress: true,
+            nextBtnText: 'Lanjut',
+            prevBtnText: 'Kembali',
+            doneBtnText: 'Selesai',
+            steps: [
+                { element: '#tour-welcome', popover: {
+                    title: '👋 Selamat Datang di OOP Learn!',
+                    description: 'Ini ringkasan progress belajarmu secara keseluruhan, lengkap dengan tombol untuk lanjut belajar.',
+                    side: 'bottom' } },
+                { element: '#tour-tahapan', popover: {
+                    title: '📚 Tahapan Pembelajaran',
+                    description: 'Buka tiap fase secara berurutan di sini, dikelompokkan per Pertemuan (Enkapsulasi, Inheritance, Proyek Akhir).',
+                    side: 'top' } },
+                { element: '#tour-nav-activity', popover: {
+                    title: '⚡ Activity',
+                    description: 'Semua aktivitas 5-fase (Model Needham) untuk Pertemuan 1-3 ada di menu ini.',
+                    side: 'right' } },
+                { element: '#tour-nav-assessment', popover: {
+                    title: '📝 Assessment',
+                    description: 'Kerjakan pretest & posttest di sini untuk mengukur kemampuanmu.',
+                    side: 'right' } },
+                { element: '#tour-nav-materi', popover: {
+                    title: '📖 Materi',
+                    description: 'Baca rangkuman materi OOP kapan saja di sini.',
+                    side: 'right' } },
+                { element: '#tour-nav-grade', popover: {
+                    title: '📊 Hasil Belajar',
+                    description: 'Pantau nilai pretest, posttest, dan progress belajarmu di sini.',
+                    side: 'right' } },
+                { element: '#tour-quicklinks', popover: {
+                    title: '🔗 Akses Cepat',
+                    description: 'Jalan pintas ke Assessment, Materi, dan Hasil Belajar tanpa perlu buka sidebar.',
+                    side: 'top' } },
+            ],
+            onDestroyed: () => markTourSeen(),
+        });
+    }
+
+    function markTourSeen() {
+        fetch("{{ route('tour.complete') }}", {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+            },
+        });
+    }
+
+    function startTour() {
+        buildSiswaTour().drive();
+    }
+
+    @if(!auth()->user()->has_seen_tour)
+    document.addEventListener('DOMContentLoaded', () => startTour());
+    @endif
+</script>
 
 </body>
 </html>

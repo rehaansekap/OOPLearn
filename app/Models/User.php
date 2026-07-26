@@ -14,7 +14,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use App\Models\LearningProgress;
 use App\Models\StudentScore;
 
-#[Fillable(['name', 'email', 'password', 'role', 'kelas'])]
+#[Fillable(['name', 'email', 'password', 'role', 'kelas', 'has_seen_tour'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -32,6 +32,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'role' => 'string',
+            'has_seen_tour' => 'boolean',
         ];
     }
 
