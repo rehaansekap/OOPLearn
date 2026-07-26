@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Konfirmasi Password - Media Pembelajaran OOP</title>
+    <link rel="icon" href="{{ asset('favicon.ico') }}?v=2" sizes="any">
+    <link rel="icon" href="{{ asset('favicon.svg') }}?v=2" type="image/svg+xml">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #e5e7eb; }
@@ -17,7 +19,7 @@
     {{-- GAMBAR (kiri) --}}
     <div class="hidden md:flex md:w-1/2 items-center justify-center bg-white p-10">
         <img
-            src="{{ asset('build/assets/image 1.png') }}"
+            src="{{ asset('images/security-illustration.svg') }}"
             alt="Ilustrasi"
             class="w-full max-w-md">
     </div>

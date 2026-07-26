@@ -1,48 +1,50 @@
-#!/bin/bash
+#!/bin/sh
 
-# Pastikan script ini menggunakan LF line endings (Linux/Unix format)
 echo "=== MEMULAI STARTUP SCRIPT CUSTOM LARAVEL ==="
 
 # 1. Salin konfigurasi Nginx kustom ke folder konfigurasi aktif
 if [ -f "/home/site/wwwroot/azure/nginx.conf" ]; then
     echo "Menyalin konfigurasi Nginx kustom..."
-    cp /home/site/wwwroot/azure/nginx.conf /etc/nginx/sites-available/default
+    cp /home/site/wwwroot/azure/nginx.conf /etc/nginx/sites-available/default 2>/dev/null || true
+    cp /home/site/wwwroot/azure/nginx.conf /etc/nginx/sites-enabled/default 2>/dev/null || true
+    cp /home/site/wwwroot/azure/nginx.conf /etc/nginx/conf.d/default.conf 2>/dev/null || true
     
     echo "Reloading Nginx service..."
-    service nginx reload
-else
-    echo "PERINGATAN: Konfigurasi Nginx kustom tidak ditemukan di /home/site/wwwroot/azure/nginx.conf"
+    nginx -s reload 2>/dev/null || service nginx reload 2>/dev/null || true
 fi
 
 # 2. Pindah ke direktori root aplikasi
-cd /home/site/wwwroot
+cd /home/site/wwwroot 2>/dev/null || true
 
-# 3. Jalankan migrasi database secara otomatis (bersifat opsional tapi direkomendasikan)
+# 3. Hapus file placeholder Azure jika ada
+rm -f /home/site/wwwroot/hostingstart.html 2>/dev/null || true
+
+# 4. Pastikan folder & file SQLite persisten ada di /home/database jika menggunakan SQLite
+if [ "$DB_CONNECTION" = "sqlite" ]; then
+    echo "Memastikan folder dan file SQLite persisten di /home/database..."
+    mkdir -p /home/database
+    if [ ! -f "/home/database/database.sqlite" ]; then
+        echo "Membuat file database SQLite baru di /home/database/database.sqlite..."
+        touch /home/database/database.sqlite
+    fi
+fi
+
+# 5. Jalankan migrasi database jika RUN_MIGRATIONS=true
 if [ "$RUN_MIGRATIONS" = "true" ]; then
     echo "Menjalankan migrasi database..."
-    php artisan migrate --force
+    php artisan migrate --force 2>/dev/null || true
 fi
 
-# 4. Bersihkan dan bangun cache Laravel untuk performa produksi
+# 6. Bersihkan dan bangun cache Laravel
 echo "Membangun cache konfigurasi dan rute Laravel..."
-php artisan optimize:clear
-php artisan config:cache
-php artisan event:cache
-php artisan route:cache
-php artisan view:cache
+php artisan optimize:clear 2>/dev/null || true
+php artisan config:cache 2>/dev/null || true
+php artisan route:cache 2>/dev/null || true
+php artisan view:cache 2>/dev/null || true
 
-# 5. Konfigurasi symbolic link untuk storage
+# 7. Konfigurasi symbolic link untuk storage
 echo "Mengonfigurasi symbolic link untuk storage..."
-if [ -e "public/storage" ] || [ -L "public/storage" ]; then
-    echo "Menghapus link/folder public/storage yang sudah ada..."
-    rm -rf public/storage
-fi
-php artisan storage:link
-
-# 6. Hapus file public/hot reload jika ada
-if [ -f "public/hot" ]; then
-    echo "Menghapus file public/hot reload..."
-    rm -f public/hot
-fi
+rm -rf public/storage 2>/dev/null || true
+php artisan storage:link 2>/dev/null || true
 
 echo "=== STARTUP SCRIPT SELESAI ==="
