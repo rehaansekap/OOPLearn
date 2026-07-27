@@ -360,8 +360,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::view('/grade', 'grade')->name('grade');
 
-    Route::view('/informasi', 'informasi')->name('informasi');
-
     /*
     |--------------------------------------------------------------------------
     | Blueprint Builder (ICS)

@@ -127,7 +127,7 @@
             </h1>
 
             <p class="mt-2 text-gray-500">
-                Masuk untuk melanjutkan pembelajaran Enapsulasi dan Inheritance
+                Masuk untuk melanjutkan pembelajaran Enkapsulasi dan Inheritance
             </p>
 
         </div>
@@ -143,45 +143,6 @@
         <form action="{{ route('login.store') }}" method="POST" class="space-y-5">
 
             @csrf
-
-            <!-- ROLE -->
-            <div>
-
-                <label class="block mb-3 font-semibold text-gray-700">
-                    Masuk Sebagai
-                </label>
-
-                <div class="flex gap-3">
-
-                    <button
-                        type="button"
-                        id="btnSiswa"
-                        onclick="setRole('siswa')"
-                        class="flex-1 rounded-xl bg-green-600 text-white py-3 font-semibold shadow-sm">
-
-                        🎓 Siswa
-
-                    </button>
-
-                    <button
-                        type="button"
-                        id="btnGuru"
-                        onclick="setRole('guru')"
-                        class="flex-1 rounded-xl border-2 border-gray-300 py-3 font-semibold hover:bg-gray-50">
-
-                        👨‍🏫 Guru
-
-                    </button>
-
-                </div>
-
-                <input
-                    type="hidden"
-                    name="role"
-                    id="role"
-                    value="siswa">
-
-            </div>
 
             <!-- EMAIL -->
             <div>
@@ -292,64 +253,6 @@
     </div>
 
 </div>
-
-<script>
-
-function setRole(role){
-
-    document.getElementById('role').value = role;
-
-    const siswa = document.getElementById('btnSiswa');
-    const guru = document.getElementById('btnGuru');
-
-    siswa.classList.remove(
-        'bg-green-600',
-        'text-white'
-    );
-
-    guru.classList.remove(
-        'bg-green-600',
-        'text-white'
-    );
-
-    siswa.classList.add(
-        'border-2',
-        'border-gray-300'
-    );
-
-    guru.classList.add(
-        'border-2',
-        'border-gray-300'
-    );
-
-    if(role === 'siswa'){
-
-        siswa.classList.remove(
-            'border-2',
-            'border-gray-300'
-        );
-
-        siswa.classList.add(
-            'bg-green-600',
-            'text-white'
-        );
-
-    }else{
-
-        guru.classList.remove(
-            'border-2',
-            'border-gray-300'
-        );
-
-        guru.classList.add(
-            'bg-green-600',
-            'text-white'
-        );
-
-    }
-}
-
-</script>
 
 </body>
 </html>

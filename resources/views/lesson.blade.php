@@ -56,6 +56,39 @@
                 <p class="text-sm text-gray-500">Pelajari materi berikut sebelum memulai aktivitas fase pembelajaran Needham.</p>
             </div>
 
+            {{-- Capaian & Tujuan Pembelajaran --}}
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-9 h-9 rounded-xl bg-green-50 flex items-center justify-center shrink-0 text-green-600">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    </div>
+                    <h3 class="text-base font-bold text-gray-900">Capaian &amp; Tujuan Pembelajaran</h3>
+                </div>
+
+                <div class="mb-5">
+                    <p class="text-xs font-bold uppercase tracking-wide text-gray-400 mb-2">Capaian Pembelajaran (CP)</p>
+                    <p class="text-sm text-gray-600 leading-relaxed">
+                        Menerapkan konsep dasar pemrograman berorientasi objek pada proyek sederhana pengembangan perangkat lunak dan gim, serta menganalisis dan memecahkan masalah dengan memanfaatkan prinsip enkapsulasi, pewarisan dan polimorfisme untuk menghasilkan solusi pemrograman yang tepat.
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-wide text-gray-400 mb-2">Tujuan Pembelajaran (TP)</p>
+                    <ol class="space-y-2">
+                        @foreach([
+                            'Peserta didik mampu menjelaskan definisi enkapsulasi dan fungsi access modifier (Public, private, protected) dalam pemrograman.',
+                            'Peserta didik mampu mengidentifikasi perbedaan antara data yang disembunyikan (private) dan data yang dapat diakses publik.',
+                            'Peserta didik mengimplementasikan metode getter setter untuk mengakses atribut yang terproteksi pada sebuah kelas sederhana.',
+                        ] as $i => $tp)
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 rounded-full bg-green-100 text-green-700 text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">{{ $i + 1 }}</span>
+                            <p class="text-sm text-gray-600 leading-relaxed">{{ $tp }}</p>
+                        </li>
+                        @endforeach
+                    </ol>
+                </div>
+            </div>
+
             @php
             $iconColors = [
                 'green'  => 'bg-green-600',

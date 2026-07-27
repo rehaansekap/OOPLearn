@@ -131,14 +131,6 @@
                                 </span>
                                 Mengukur peningkatan pemahaman OOP
                             </li>
-                            <li class="flex items-start gap-2.5 text-sm text-gray-600">
-                                <span class="shrink-0 mt-0.5 w-4 h-4 rounded-full bg-green-500 flex items-center justify-center">
-                                    <svg class="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                                    </svg>
-                                </span>
-                                Digunakan untuk menghitung N-Gain hasil belajar
-                            </li>
                         </ul>
 
                         <div class="mt-auto">
@@ -163,7 +155,7 @@
             <div class="mt-5 bg-amber-50 border border-amber-200 rounded-lg px-4 py-4">
                 <p class="text-sm font-semibold text-amber-800 mb-1">Petunjuk Penting</p>
                 <p class="text-xs text-amber-700 leading-relaxed">
-                    Kerjakan pretest terlebih dahulu sebelum memulai materi pembelajaran. Posttest hanya dapat dikerjakan setelah seluruh fase pembelajaran selesai. Hasil keduanya akan menentukan nilai N-Gain kamu.
+                    Kerjakan pretest terlebih dahulu sebelum memulai materi pembelajaran. Posttest hanya dapat dikerjakan setelah seluruh fase pembelajaran selesai.
                 </p>
             </div>
 

@@ -22,14 +22,15 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             ...$this->profileRules(),
             'password' => $this->passwordRules(),
-            'role' => ['required', 'string', 'in:siswa,guru'],
         ])->validate();
 
+        // Role selalu "siswa" untuk pendaftaran mandiri — akun guru hanya
+        // dibuat manual oleh admin, bukan lewat pilihan bebas di form register.
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => $input['password'],
-            'role' => $input['role'] ?? 'siswa',
+            'role' => 'siswa',
         ]);
     }
 }

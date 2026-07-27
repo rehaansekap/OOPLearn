@@ -37,13 +37,6 @@
                 $pretest  = $score?->pretest  ?? null;
                 $posttest = $score?->posttest ?? null;
                 $gain     = ($pretest !== null && $posttest !== null) ? ($posttest - $pretest) : null;
-                $nGain    = ($pretest !== null && $posttest !== null && $pretest < 100)
-                            ? round(($posttest - $pretest) / (100 - $pretest), 2)
-                            : null;
-                $nGainCategory = $nGain === null ? null
-                    : ($nGain >= 0.7 ? 'Tinggi' : ($nGain >= 0.3 ? 'Sedang' : 'Rendah'));
-                $nGainColor = $nGain === null ? 'gray'
-                    : ($nGain >= 0.7 ? 'green' : ($nGain >= 0.3 ? 'amber' : 'red'));
             @endphp
 
             <div class="mb-6">
@@ -100,37 +93,6 @@
                 </div>
 
             </div>
-
-            {{-- N-Gain --}}
-            @if($nGain !== null)
-            <div class="bg-white rounded-xl border border-gray-200 p-5 mb-5">
-                <div class="flex flex-col sm:flex-row sm:items-start gap-6">
-                    <div class="flex-1">
-                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">N-Gain Score</p>
-                        <p class="text-4xl font-black
-                            {{ $nGainColor === 'green' ? 'text-green-600' : ($nGainColor === 'amber' ? 'text-amber-500' : 'text-red-500') }}">
-                            {{ number_format($nGain, 2) }}
-                        </p>
-                        <p class="text-sm text-gray-600 mt-1.5">
-                            Kategori: <span class="font-semibold
-                                {{ $nGainColor === 'green' ? 'text-green-600' : ($nGainColor === 'amber' ? 'text-amber-600' : 'text-red-500') }}">
-                                {{ $nGainCategory }}
-                            </span>
-                        </p>
-                    </div>
-                    <div class="shrink-0 text-sm text-gray-600 space-y-1 sm:border-l sm:border-gray-100 sm:pl-6">
-                        <p class="text-xs font-semibold text-gray-500 mb-2">Kriteria N-Gain</p>
-                        <p class="text-xs">≥ 0,70 → <strong>Tinggi</strong></p>
-                        <p class="text-xs">0,30 – 0,69 → <strong>Sedang</strong></p>
-                        <p class="text-xs">&lt; 0,30 → <strong>Rendah</strong></p>
-                    </div>
-                </div>
-            </div>
-            @else
-            <div class="border border-dashed border-gray-200 rounded-lg px-4 py-4 mb-5 text-center">
-                <p class="text-sm text-gray-400">N-Gain dapat dihitung setelah pretest dan posttest selesai dikerjakan.</p>
-            </div>
-            @endif
 
             <a href="{{ route('dashboard.siswa') }}"
                class="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 bg-white border border-gray-200 px-5 py-2.5 rounded-lg hover:border-gray-300 transition">

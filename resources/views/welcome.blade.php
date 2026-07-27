@@ -199,7 +199,7 @@
                         </svg>
                     </div>
                     <h3 class="font-bold text-gray-900 text-base mb-2">Pretest & Posttest</h3>
-                    <p class="text-sm text-gray-500 leading-relaxed">Evaluasi kemampuan awal dan akhir dengan N-Gain untuk mengukur peningkatan nyata.</p>
+                    <p class="text-sm text-gray-500 leading-relaxed">Evaluasi kemampuan awal dan akhir untuk mengukur peningkatan pemahamanmu.</p>
                 </div>
 
                 <div class="group p-7 rounded-2xl border border-gray-100 hover:border-amber-200 hover:shadow-md transition bg-white">
@@ -233,6 +233,36 @@
                 </div>
 
             </div>
+
+            {{-- ── Cara Penggunaan ── --}}
+            <div class="max-w-2xl mx-auto mt-16 bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-base font-bold text-gray-900">Cara Penggunaan Sistem</h3>
+                </div>
+
+                <ol class="space-y-3">
+                    @foreach([
+                        ['Kerjakan Pretest terlebih dahulu melalui menu Assessment untuk mengukur pengetahuan awal sebelum pembelajaran.', 'Assessment'],
+                        ['Ikuti Activity Model Needham untuk Pertemuan 1–3 secara berurutan: Fase 1 Orientasi, Fase 2 Pencetusan Ide, Fase 3 Penstrukturan (materi pembelajaran tersedia di sini), Fase 4 Aplikasi, dan Fase 5 Refleksi.', 'Activity'],
+                        ['Setelah menyelesaikan semua pertemuan, kerjakan Posttest melalui menu Assessment.', 'Assessment'],
+                        ['Pantau perkembangan nilaimu melalui menu Hasil Belajar.', 'Hasil Belajar'],
+                    ] as $i => [$step, $menu])
+                    <li class="flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">{{ $i + 1 }}</span>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            {{ $step }}
+                            <span class="inline-block ml-1 text-[10px] font-semibold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded-md">{{ $menu }}</span>
+                        </p>
+                    </li>
+                    @endforeach
+                </ol>
+            </div>
+
         </div>
     </section>
 

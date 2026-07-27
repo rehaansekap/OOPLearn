@@ -58,18 +58,6 @@
                         placeholder="Masukkan Email"
                         class="w-full px-4 py-3 border-2 border-gray-400 rounded-xl italic focus:outline-none focus:border-green-600 transition">
                 </div>
-                <div class="mb-4">
-                    <label class="block text--black font-bold mb-1">
-                        Daftar Sebagai:
-                    </label>
-
-                    <select
-                        name="role"
-                        class="w-full px-4 py-3 border-2 border-gray-400 rounded-xl italic focus:outline-none focus:border-green-600 transition">
-                        <option value="siswa">Siswa</option>
-                        <option value="guru">Guru</option>
-                    </select>
-                </div>
                 <!-- Password -->
                 <div class="mb-4">
                     <label class="block text-black font-bold mb-1">Password:</label>
