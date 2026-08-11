@@ -42,6 +42,7 @@ class MateriController extends Controller
             'color'     => 'required|in:green,blue,purple,indigo,amber',
             'video'     => 'nullable|file|mimes:mp4,webm,ogg,mov|max:204800',
             'video_url' => 'nullable|url|max:500',
+            'pdf'       => 'nullable|file|mimes:pdf|max:20480',
         ]);
 
         $videoPath = null;
@@ -49,11 +50,17 @@ class MateriController extends Controller
             $videoPath = $request->file('video')->store('videos/materi', 'public');
         }
 
+        $pdfPath = null;
+        if ($request->hasFile('pdf')) {
+            $pdfPath = $request->file('pdf')->store('pdf/materi', 'public');
+        }
+
         Materi::create([
             'title'      => $data['title'],
             'content'    => $data['content'] ?? null,
             'video_path' => $videoPath,
             'video_url'  => $data['video_url'] ?? null,
+            'pdf_path'   => $pdfPath,
             'color'      => $data['color'],
             'sort_order' => (Materi::max('sort_order') ?? 0) + 1,
         ]);
@@ -71,6 +78,8 @@ class MateriController extends Controller
             'video'        => 'nullable|file|mimes:mp4,webm,ogg,mov|max:204800',
             'video_url'    => 'nullable|url|max:500',
             'remove_video' => 'nullable|boolean',
+            'pdf'          => 'nullable|file|mimes:pdf|max:20480',
+            'remove_pdf'   => 'nullable|boolean',
         ]);
 
         $videoPath = $materi->video_path;
@@ -83,11 +92,22 @@ class MateriController extends Controller
             $videoPath = $request->file('video')->store('videos/materi', 'public');
         }
 
+        $pdfPath = $materi->pdf_path;
+
+        if ($request->boolean('remove_pdf')) {
+            if ($pdfPath) Storage::disk('public')->delete($pdfPath);
+            $pdfPath = null;
+        } elseif ($request->hasFile('pdf')) {
+            if ($pdfPath) Storage::disk('public')->delete($pdfPath);
+            $pdfPath = $request->file('pdf')->store('pdf/materi', 'public');
+        }
+
         $materi->update([
             'title'      => $data['title'],
             'content'    => $data['content'] ?? null,
             'video_path' => $videoPath,
             'video_url'  => $data['video_url'] ?? null,
+            'pdf_path'   => $pdfPath,
             'color'      => $data['color'],
         ]);
 
@@ -99,6 +119,9 @@ class MateriController extends Controller
     {
         if ($materi->video_path) {
             Storage::disk('public')->delete($materi->video_path);
+        }
+        if ($materi->pdf_path) {
+            Storage::disk('public')->delete($materi->pdf_path);
         }
         $materi->delete();
 

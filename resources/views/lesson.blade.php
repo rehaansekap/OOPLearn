@@ -151,6 +151,30 @@
                 @if($materi->content)
                 <div class="text-sm text-gray-600 leading-relaxed materi-content">{{ $materi->content }}</div>
                 @endif
+
+                {{-- PDF (materi/PPT dari guru) --}}
+                @if($materi->pdf_path)
+                <div class="{{ $materi->content ? 'mt-5' : '' }} bg-gray-50 border border-gray-200 rounded-xl p-4 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center text-red-500 shrink-0">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-semibold text-gray-800">Materi PDF</p>
+                            <p class="text-xs text-gray-400 truncate">{{ basename($materi->pdf_path) }}</p>
+                        </div>
+                    </div>
+                    <a href="{{ Storage::url($materi->pdf_path) }}" target="_blank"
+                       class="inline-flex items-center gap-1.5 bg-white border border-gray-200 hover:border-gray-300 text-gray-700 text-xs font-semibold px-3 py-2 rounded-lg transition shrink-0">
+                        Buka PDF
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                        </svg>
+                    </a>
+                </div>
+                @endif
             </div>
             @empty
             <div class="bg-white rounded-2xl border border-dashed border-gray-200 p-12 text-center text-gray-400 mb-4">

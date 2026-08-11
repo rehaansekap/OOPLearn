@@ -423,6 +423,12 @@
                                            class="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border file:border-gray-200 file:text-xs file:font-medium file:bg-gray-50 file:text-gray-600 hover:file:bg-gray-100 file:transition cursor-pointer">
                                     <p class="text-[11px] text-gray-400 mt-1">MP4, WebM, MOV · Maks. 200 MB</p>
                                 </div>
+                                <div class="mb-5">
+                                    <label class="block text-xs font-medium text-gray-600 mb-1">Upload PDF (Materi/PPT)</label>
+                                    <input type="file" name="pdf" accept="application/pdf"
+                                           class="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border file:border-gray-200 file:text-xs file:font-medium file:bg-gray-50 file:text-gray-600 hover:file:bg-gray-100 file:transition cursor-pointer">
+                                    <p class="text-[11px] text-gray-400 mt-1">Kalau presentasimu masih format PPT, export dulu ke PDF sebelum diunggah. PDF · Maks. 20 MB</p>
+                                </div>
                                 <div class="flex gap-2">
                                     <button type="submit"
                                             class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition">
@@ -480,6 +486,18 @@
                                            class="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border file:border-gray-200 file:text-xs file:font-medium file:bg-gray-50 file:text-gray-600 hover:file:bg-gray-100 file:transition cursor-pointer">
                                     <p class="text-[11px] text-gray-400 mt-1">Kosongkan jika tidak ingin mengganti video. MP4, WebM, MOV · Maks. 200 MB</p>
                                 </div>
+                                <div class="mb-5">
+                                    <label class="block text-xs font-medium text-gray-600 mb-1">Upload PDF (Materi/PPT)</label>
+                                    @if($m->pdf_path)
+                                    <p class="text-xs text-gray-500 mb-1.5">PDF saat ini: <span class="font-medium">{{ basename($m->pdf_path) }}</span></p>
+                                    <label class="inline-flex items-center gap-1.5 text-xs text-gray-500 mb-2 cursor-pointer">
+                                        <input type="checkbox" name="remove_pdf" value="1"> Hapus PDF yang ada
+                                    </label><br>
+                                    @endif
+                                    <input type="file" name="pdf" accept="application/pdf"
+                                           class="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border file:border-gray-200 file:text-xs file:font-medium file:bg-gray-50 file:text-gray-600 hover:file:bg-gray-100 file:transition cursor-pointer">
+                                    <p class="text-[11px] text-gray-400 mt-1">Kosongkan jika tidak ingin mengganti PDF. Kalau presentasimu masih format PPT, export dulu ke PDF. Maks. 20 MB</p>
+                                </div>
                                 <div class="flex gap-2">
                                     <button type="submit"
                                             class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition">
@@ -525,6 +543,7 @@
                                     <th class="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wide">Judul</th>
                                     <th class="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wide">Isi Materi</th>
                                     <th class="text-center px-4 py-3 font-semibold text-xs uppercase tracking-wide">Video</th>
+                                    <th class="text-center px-4 py-3 font-semibold text-xs uppercase tracking-wide">PDF</th>
                                     <th class="text-right px-4 py-3 rounded-r-xl font-semibold text-xs uppercase tracking-wide">Aksi</th>
                                 </tr>
                             </thead>
@@ -557,6 +576,13 @@
                                             <span class="text-xs text-gray-300">—</span>
                                         @endif
                                     </td>
+                                    <td class="px-4 py-3 text-center">
+                                        @if($materi->pdf_path)
+                                            <a href="{{ Storage::url($materi->pdf_path) }}" target="_blank" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium underline">Lihat</a>
+                                        @else
+                                            <span class="text-xs text-gray-300">—</span>
+                                        @endif
+                                    </td>
                                     <td class="px-4 py-3 text-right">
                                         <div class="inline-flex items-center gap-3">
                                             <button @click="openEdit({ id: {{ $materi->id }}, title: {{ Js::from($materi->title) }}, content: {{ Js::from($materi->content ?? '') }}, color: '{{ $materi->color }}' })"
@@ -574,7 +600,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="5" class="px-4 py-10 text-center text-gray-300 text-sm">
+                                    <td colspan="6" class="px-4 py-10 text-center text-gray-300 text-sm">
                                         Belum ada materi. Klik <span class="font-semibold text-indigo-500">Tambah Materi</span> untuk mulai menambahkan.
                                     </td>
                                 </tr>
