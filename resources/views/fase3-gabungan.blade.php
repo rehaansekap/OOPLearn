@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fase 3 - Penstrukturan Ide</title>
+    <title>Pertemuan 3 – Fase 3 – Penstrukturan Ide</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -17,7 +17,7 @@
         body { font-family: 'Inter', sans-serif; }
         [x-cloak] { display: none !important; }
         @keyframes ring-out {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(22,163,74,0.45); }
+            0%, 100% { box-shadow: 0 0 0 0 rgba(147,51,234,0.45); }
             60%       { box-shadow: 0 0 0 12px transparent; }
         }
         .btn-pulse { animation: ring-out 2s ease-in-out infinite; }
@@ -66,7 +66,7 @@
         }
         .snap-in { animation: snapIn 0.2s ease; }
 
-        /* Mapping modal (pola sama dgn .acc-modal di blueprint/builder.blade.php) */
+        /* Mapping modal (pola sama dgn fase3.blade.php P1 / fase3-inheritance.blade.php P2) */
         @keyframes fadeSlide {
             from { opacity:0; transform: translateY(8px) scale(0.98); }
             to   { opacity:1; transform: translateY(0)    scale(1);    }
@@ -117,25 +117,28 @@
 
     <main class="flex-1 flex flex-col overflow-hidden">
 
-        @include('_navbar', ['navTitle' => 'Fase 3 – Penstrukturan Ide'])
+        @include('_navbar', ['navTitle' => 'Pertemuan 3 – Fase 3 – Penstrukturan Ide'])
         <div class="flex-1 overflow-y-auto p-8">
 
         <div class="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 p-8 lg:p-10 min-h-[80vh] relative" data-aos="fade-up">
 
-            {{-- Phase badge + Materi link --}}
+            {{-- Phase badge + Pertemuan badge + Materi link --}}
             <div class="flex items-center justify-between gap-3 mb-5 flex-wrap">
-                <div class="flex items-center gap-3">
-                    <span class="inline-flex items-center gap-1.5 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                <div class="flex items-center gap-3 flex-wrap">
+                    <span class="inline-flex items-center gap-1.5 bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full">
                         <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                         </svg>
                         Fase 3 dari 5
                     </span>
                     <span class="text-xs text-gray-400 font-medium">Model Needham Lima Fase</span>
+                    <span class="inline-flex items-center gap-1.5 bg-purple-50 text-purple-700 border border-purple-200 text-xs font-semibold px-3 py-1 rounded-full">
+                        Pertemuan 3 · Enkapsulasi & Inheritance
+                    </span>
                 </div>
-                <a href="{{ route('lesson') }}" target="_blank" onclick="tandaiMateriDibuka(1)"
-                   class="inline-flex items-center gap-2 text-xs font-semibold text-green-700 bg-green-50 border border-green-200
-                          px-3 py-1.5 rounded-full hover:bg-green-100 hover:border-green-300 transition">
+                <a href="{{ route('lesson') }}" target="_blank" onclick="tandaiMateriDibuka(3)"
+                   class="inline-flex items-center gap-2 text-xs font-semibold text-purple-700 bg-purple-50 border border-purple-200
+                          px-3 py-1.5 rounded-full hover:bg-purple-100 hover:border-purple-300 transition">
                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
                               d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
@@ -149,71 +152,151 @@
 
             <h2 class="text-2xl font-extrabold text-gray-900 mb-1">
                 Penstrukturan Ide
-                <span class="text-green-600">— Class BankAccount</span>
+                <span class="text-purple-600">— Sistem Akun Sekolah</span>
             </h2>
             <p class="text-sm text-gray-500 mb-6">
-                Susun blok kode untuk membuat class enkapsulasi yang benar.
+                Susun blok kode untuk membuat class Guru yang mewarisi AkunSekolah, dengan password tetap aman.
                 Butuh referensi?
-                <a href="{{ route('lesson') }}" target="_blank" onclick="tandaiMateriDibuka(1)" class="text-green-600 font-medium hover:underline">Buka halaman Materi</a>.
+                <a href="{{ route('lesson') }}" target="_blank" onclick="tandaiMateriDibuka(3)" class="text-purple-600 font-medium hover:underline">Buka halaman Materi</a>.
             </p>
 
-            @include('_needham-stepper', ['currentFase' => 3])
+            {{-- Needham stepper (inline, tema ungu Pertemuan 3) --}}
+            <div class="flex items-center mb-8 overflow-x-auto pb-1">
+                @php
+                $_steps = [1 => 'Orientasi', 2 => 'Pencetusan Ide', 3 => 'Penstrukturan', 4 => 'Aplikasi', 5 => 'Refleksi'];
+                @endphp
+                @foreach($_steps as $n => $nama)
+                <div class="flex items-center">
+                    <div class="flex flex-col items-center gap-1 px-3">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all"
+                             style="{{ $n <= 3 ? 'background:#9333ea;border-color:#9333ea;color:white;' : 'background:white;border-color:#e5e7eb;color:#9ca3af;' }}">
+                            {{ $n < 3 ? '✓' : $n }}
+                        </div>
+                        <span class="text-xs font-medium whitespace-nowrap"
+                              style="{{ $n === 3 ? 'color:#7e22ce;font-weight:700;' : 'color:#9ca3af;' }}">
+                            {{ $nama }}
+                        </span>
+                    </div>
+                    @if($n < 5)
+                    <div class="h-0.5 w-8 flex-shrink-0" style="{{ $n < 3 ? 'background:#9333ea;' : 'background:#e5e7eb;' }}"></div>
+                    @endif
+                </div>
+                @endforeach
+            </div>
 
             {{-- Tujuan Pembelajaran --}}
-            <div class="bg-blue-50 border border-blue-100 rounded-2xl p-5 mb-6 flex gap-4">
-                <div class="shrink-0 w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
+            <div class="bg-purple-50 border border-purple-100 rounded-2xl p-5 mb-6 flex gap-4">
+                <div class="shrink-0 w-9 h-9 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                 </div>
                 <div>
-                    <p class="text-xs font-bold uppercase tracking-wide text-blue-700 mb-2">Tujuan Pembelajaran</p>
-                    <ul class="space-y-1 text-sm text-blue-900">
-                        <li class="flex gap-2"><span class="text-blue-400 font-bold shrink-0">✓</span> Menyusun struktur class BankAccount dengan enkapsulasi yang benar menggunakan block programming</li>
-                        <li class="flex gap-2"><span class="text-blue-400 font-bold shrink-0">✓</span> Memahami perbedaan atribut public, protected (<code class="bg-blue-100 px-1 rounded text-xs">_</code>), dan private (<code class="bg-blue-100 px-1 rounded text-xs">__</code>) di Python</li>
+                    <p class="text-xs font-bold uppercase tracking-wide text-purple-700 mb-2">Tujuan Pembelajaran</p>
+                    <ul class="space-y-1 text-sm text-purple-900">
+                        <li class="flex gap-2"><span class="text-purple-400 font-bold shrink-0">✓</span> Menyusun class Guru yang mewarisi AkunSekolah dengan menggunakan block programming</li>
+                        <li class="flex gap-2"><span class="text-purple-400 font-bold shrink-0">✓</span> Memahami bahwa atribut private tetap terkunci meski diwariskan, dan hanya bisa diakses lewat getter/setter</li>
                     </ul>
                 </div>
             </div>
 
-            {{-- Studi Kasus --}}
-            <div class="mb-6" data-aos="fade-up">
-                <div class="flex items-start gap-4 mb-4">
-                    <div class="text-4xl leading-none mt-0.5 select-none">🏦</div>
+            {{-- ═══════════════════════════════════════════════════════════
+                 ATURAN CARDS (dipindahkan dari pertemuan-fase.blade.php,
+                 blok @elseif($pertemuan==3 && $fase==3) lama)
+            ═══════════════════════════════════════════════════════════ --}}
+            <div class="space-y-8 pb-10" data-aos="fade-up" data-aos-duration="550">
+
+                <div class="flex items-start gap-4">
+                    <div class="text-4xl leading-none mt-0.5 select-none">🏗️</div>
                     <div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-1">Studi Kasus: Sistem Rekening Bank Digital</h3>
-                        <p class="text-sm text-orange-600 font-medium">Ingat masalah di Fase 1?</p>
+                        <h3 class="text-xl font-bold text-gray-900 mb-1">
+                            Penstrukturan Ide: Aturan Gabungan OOP
+                        </h3>
+                        <p class="text-sm text-purple-600 font-medium">Enkapsulasi + Inheritance · Aturan krusial yang harus dipahami</p>
                     </div>
                 </div>
 
-                <p class="text-gray-700 text-sm leading-relaxed mb-4">
-                    Pada Fase 1, kamu melihat bagaimana saldo rekening bisa diubah sembarangan menjadi
-                    <code class="bg-gray-100 px-1.5 py-0.5 rounded text-red-600 font-mono text-xs">akun1.saldo = -1000</code>
-                    karena atributnya bersifat publik. Sekarang saatnya memperbaikinya!
-                    Bank tempatmu bekerja meminta kamu menyusun class <strong class="text-gray-900">BankAccount</strong>
-                    yang aman, dengan ketentuan berikut:
+                <p class="text-gray-700 text-base leading-relaxed">
+                    Saat menggabungkan dua konsep ini, ada aturan penting yang
+                    <strong class="text-gray-900">wajib kamu ingat</strong> agar sistem bekerja dengan benar:
                 </p>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div class="bg-purple-50 border border-purple-100 rounded-xl p-4">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <span class="text-lg">🔒</span>
-                            <span class="text-xs font-bold text-purple-800">Saldo bersifat private</span>
+                <div class="space-y-4">
+
+                    {{-- Aturan 1 --}}
+                    <div class="bg-white border border-gray-200 rounded-2xl p-5 flex gap-4 shadow-sm">
+                        <div class="w-10 h-10 bg-rose-100 rounded-xl flex items-center justify-center shrink-0 mt-0.5">
+                            <span class="text-rose-700 font-black text-lg leading-none">1</span>
                         </div>
-                        <p class="text-xs text-purple-600 leading-relaxed">Tidak boleh diubah langsung dari luar class, harus lewat method khusus.</p>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="font-bold text-gray-900">Private Tetap Private</span>
+                                <span class="text-xs bg-rose-50 border border-rose-200 text-rose-600 font-semibold px-2 py-0.5 rounded-full">Aturan Enkapsulasi</span>
+                            </div>
+                            <p class="text-sm text-gray-600 leading-relaxed">
+                                Meski diturunkan melalui Inheritance, class anak
+                                <strong class="text-rose-700">tidak bisa langsung menyentuh</strong>
+                                atribut <code class="bg-gray-100 text-gray-700 font-mono text-xs px-1 rounded">private</code>
+                                milik class induk.
+                                "Brankas" tetap terkunci rapat meski sudah diwariskan.
+                            </p>
+                            <div class="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 font-mono text-xs space-y-0.5">
+                                <p class="text-purple-600 font-semibold">class Guru(AkunSekolah):</p>
+                                <p class="ml-4 text-gray-400"># ❌ INI AKAN ERROR!</p>
+                                <p class="ml-4"><span class="text-red-500">print(self.__password)</span>  <span class="text-gray-400"># tidak bisa diakses</span></p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-orange-50 border border-orange-100 rounded-xl p-4">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <span class="text-lg">🔁</span>
-                            <span class="text-xs font-bold text-orange-800">Sediakan getter &amp; setter</span>
+
+                    {{-- Aturan 2 --}}
+                    <div class="bg-white border border-gray-200 rounded-2xl p-5 flex gap-4 shadow-sm">
+                        <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center shrink-0 mt-0.5">
+                            <span class="text-green-700 font-black text-lg leading-none">2</span>
                         </div>
-                        <p class="text-xs text-orange-600 leading-relaxed"><code class="text-[11px]">get_saldo()</code> untuk membaca, <code class="text-[11px]">set_saldo()</code> untuk mengubah nilai saldo dengan aman.</p>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="font-bold text-gray-900">Akses via Method Resmi</span>
+                                <span class="text-xs bg-green-50 border border-green-200 text-green-600 font-semibold px-2 py-0.5 rounded-full">Solusi yang Benar</span>
+                            </div>
+                            <p class="text-sm text-gray-600 leading-relaxed">
+                                Class anak <strong class="text-green-700">hanya bisa</strong> membaca atau mengubah
+                                password induknya melalui method
+                                <code class="bg-gray-100 text-gray-700 font-mono text-xs px-1 rounded">Getter</code>
+                                dan
+                                <code class="bg-gray-100 text-gray-700 font-mono text-xs px-1 rounded">Setter</code>
+                                yang berstatus <strong>public</strong> — pintu resmi yang sudah disediakan class induk.
+                            </p>
+                            <div class="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 font-mono text-xs space-y-0.5">
+                                <p class="text-purple-600 font-semibold">class Guru(AkunSekolah):</p>
+                                <p class="ml-4 text-gray-400"># ✅ CARA YANG BENAR</p>
+                                <p class="ml-4"><span class="text-blue-600">pw</span> = <span class="text-green-600">self.get_password()</span>  <span class="text-gray-400"># lewat getter</span></p>
+                                <p class="ml-4"><span class="text-green-600">self.set_password(</span><span class="text-orange-500">"baru123"</span><span class="text-green-600">)</span>  <span class="text-gray-400"># lewat setter</span></p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-green-50 border border-green-100 rounded-xl p-4">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <span class="text-lg">✅</span>
-                            <span class="text-xs font-bold text-green-800">Data terlindungi</span>
-                        </div>
-                        <p class="text-xs text-green-600 leading-relaxed">Kasus saldo -1000 seperti di Fase 1 tidak akan terjadi lagi.</p>
+
+                </div>
+
+                <div class="bg-purple-600 rounded-2xl p-5 flex gap-4">
+                    <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                        <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-purple-100 uppercase tracking-wider mb-1.5">Inti dari Gabungan Ini</p>
+                        <p class="text-white text-sm leading-relaxed">
+                            Inheritance membuat struktur class lebih <strong>efisien dan logis</strong>,
+                            sementara Enkapsulasi menjamin bahwa data sensitif tetap
+                            <strong>terlindungi</strong> — bahkan dari class-class turunannya sendiri.
+                        </p>
                     </div>
                 </div>
+
+                <p class="text-gray-700 text-sm leading-relaxed">
+                    Sekarang saatnya mempraktikkan kedua aturan ini. Susun blok kode di bawah untuk membuat
+                    <strong class="text-gray-900">class Guru</strong> yang mewarisi
+                    <strong class="text-gray-900">class AkunSekolah</strong>, dengan password yang tetap aman!
+                </p>
+
             </div>
 
             {{-- Gerbang Materi — wajib dibuka dulu sebelum toolbox praktik aktif --}}
@@ -225,7 +308,7 @@
                     Sebelum menyusun blok kode di bawah, buka dan baca dulu halaman Materi supaya konsepnya
                     benar-benar matang — bukan cuma coba-coba blok.
                 </p>
-                <a href="{{ route('lesson') }}" target="_blank" onclick="tandaiMateriDibuka(1)"
+                <a href="{{ route('lesson') }}" target="_blank" onclick="tandaiMateriDibuka(3)"
                    class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-3 rounded-xl transition shadow-sm">
                     📖 Buka Materi Sekarang
                 </a>
@@ -254,6 +337,14 @@
                                 Struktur Class
                             </button>
 
+                            <button class="cat-btn" id="cat-pewarisan" onclick="setCategory('pewarisan')"
+                                    style="color:rgba(255,255,255,0.45);background:transparent;">
+                                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/>
+                                </svg>
+                                Pewarisan
+                            </button>
+
                             <button class="cat-btn" id="cat-akses" onclick="setCategory('akses')"
                                     style="color:rgba(255,255,255,0.45);background:transparent;">
                                 <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -268,22 +359,6 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
                                 </svg>
                                 Method
-                            </button>
-
-                            <button class="cat-btn" id="cat-nilai" onclick="setCategory('nilai')"
-                                    style="color:rgba(255,255,255,0.45);background:transparent;">
-                                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"/>
-                                </svg>
-                                Nilai / Return
-                            </button>
-
-                            <button class="cat-btn" id="cat-kondisi" onclick="setCategory('kondisi')"
-                                    style="color:rgba(255,255,255,0.45);background:transparent;">
-                                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v4m0 0l-5 5m5-5l5 5M7 13v4a2 2 0 002 2h6a2 2 0 002-2v-4"/>
-                                </svg>
-                                Kondisi
                             </button>
 
                         </div>
@@ -305,7 +380,7 @@
                             <span style="width:11px;height:11px;border-radius:50%;background:#ff5f56;display:inline-block;"></span>
                             <span style="width:11px;height:11px;border-radius:50%;background:#ffbd2e;display:inline-block;"></span>
                             <span style="width:11px;height:11px;border-radius:50%;background:#27c93f;display:inline-block;"></span>
-                            <span style="margin-left:8px;color:#475569;font-size:11px;font-weight:600;font-family:monospace;">enkapsulasi.py</span>
+                            <span style="margin-left:8px;color:#475569;font-size:11px;font-weight:600;font-family:monospace;">akun_sekolah.py</span>
                         </div>
                         <button onclick="resetWorkspace()"
                                 style="font-size:11px;color:#475569;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:3px 10px;cursor:pointer;font-weight:600;"
@@ -368,8 +443,8 @@
                         <div id="outSuccess" style="display:none;text-align:center;">
                             <div style="font-size:28px;margin-bottom:8px;">✅</div>
                             <p style="color:#4ade80;font-size:12px;font-weight:700;line-height:1.5;">
-                                Data terlindungi!<br>
-                                <span style="font-size:10px;font-weight:500;opacity:.75;">Enkapsulasi berhasil.</span>
+                                Gabungan berhasil!<br>
+                                <span style="font-size:10px;font-weight:500;opacity:.75;">Guru mewarisi AkunSekolah, password tetap aman.</span>
                             </p>
                         </div>
 
@@ -382,7 +457,6 @@
 
                     </div>
 
-                    {{-- lanjutBox dipindah ke bawah panel utama --}}
                 </div>
 
             </div><!-- end flex row -->
@@ -391,17 +465,17 @@
             {{-- ── NAVIGASI LANJUT (muncul setelah Run berhasil) ──────────── --}}
             <div id="lanjutBox"
                  style="display:none;"
-                 class="mt-5 flex items-center justify-between gap-4 bg-green-50 border border-green-200 rounded-2xl px-6 py-4">
+                 class="mt-5 flex items-center justify-between gap-4 bg-purple-50 border border-purple-200 rounded-2xl px-6 py-4">
 
                 <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-green-500 flex items-center justify-center shrink-0">
+                    <div class="w-9 h-9 rounded-xl bg-purple-500 flex items-center justify-center shrink-0">
                         <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
                         </svg>
                     </div>
                     <div>
-                        <p class="text-sm font-bold text-green-800">Penstrukturan Ide selesai!</p>
-                        <p class="text-xs text-green-600">Enkapsulasi berhasil disusun. Lanjutkan ke Fase 4 untuk mempraktikkannya.</p>
+                        <p class="text-sm font-bold text-purple-800">Penstrukturan Ide selesai!</p>
+                        <p class="text-xs text-purple-600">Class Guru berhasil mewarisi AkunSekolah dengan aman. Lanjutkan ke Fase 4 untuk mempraktikkannya.</p>
                     </div>
                 </div>
 
@@ -411,10 +485,10 @@
                         🔍 Lihat Kode Python
                     </button>
 
-                    <form method="POST" action="{{ route('fase3.complete') }}">
+                    <form method="POST" action="{{ route('p3.fase3.complete') }}">
                         @csrf
                         <button type="submit"
-                                class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition shadow-sm whitespace-nowrap">
+                                class="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition shadow-sm whitespace-nowrap">
                             Selanjutnya: Fase 4 – Aplikasi
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
@@ -447,30 +521,37 @@
                                  onmouseenter="highlightPair('struktur-class')" onmouseleave="clearHighlight()">
                                 📦 Struktur Class
                             </div>
+                            <div class="mapping-item" data-map-id="pewarisan"
+                                 onmouseenter="highlightPair('pewarisan')" onmouseleave="clearHighlight()">
+                                🧬 Pewarisan
+                            </div>
                             <div class="mapping-item" data-map-id="akses-data"
                                  onmouseenter="highlightPair('akses-data')" onmouseleave="clearHighlight()">
                                 🔒 Akses Data
                             </div>
                             <div class="mapping-item" data-map-id="method"
                                  onmouseenter="highlightPair('method')" onmouseleave="clearHighlight()">
-                                ⚡ Method
-                            </div>
-                            <div class="mapping-item" data-map-id="nilai-return"
-                                 onmouseenter="highlightPair('nilai-return')" onmouseleave="clearHighlight()">
-                                ↩️ Nilai / Return
+                                💬 Method
                             </div>
                         </div>
 
                         {{-- Kolom kanan: kode Python acuan --}}
                         <div style="flex:1;min-width:0;background:#0a101e;border-radius:10px;padding:14px 16px;overflow-y:auto;">
                             <pre style="margin:0;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.9;color:#e2e8f0;"><code
-><span class="code-line" data-map-id="struktur-class" onmouseenter="highlightPair('struktur-class')" onmouseleave="clearHighlight()">class BankAccount:</span>
-<span class="code-line" data-map-id="struktur-class" onmouseenter="highlightPair('struktur-class')" onmouseleave="clearHighlight()">    def __init__(self):</span>
-<span class="code-line" data-map-id="akses-data" onmouseenter="highlightPair('akses-data')" onmouseleave="clearHighlight()">        self.__saldo = 0</span>
-<span class="code-line" data-map-id="method" onmouseenter="highlightPair('method')" onmouseleave="clearHighlight()">    def get_saldo(self):</span>
-<span class="code-line" data-map-id="nilai-return" onmouseenter="highlightPair('nilai-return')" onmouseleave="clearHighlight()">        return self.__saldo</span>
-<span class="code-line" data-map-id="method" onmouseenter="highlightPair('method')" onmouseleave="clearHighlight()">    def set_saldo(self, jumlah):</span>
-<span class="code-line" data-map-id="akses-data" onmouseenter="highlightPair('akses-data')" onmouseleave="clearHighlight()">        self.__saldo = jumlah</span></code></pre>
+><span class="code-line" data-map-id="struktur-class" onmouseenter="highlightPair('struktur-class')" onmouseleave="clearHighlight()">class AkunSekolah:</span>
+<span class="code-line" data-map-id="struktur-class" onmouseenter="highlightPair('struktur-class')" onmouseleave="clearHighlight()">    def __init__(self, nama, password):</span>
+<span class="code-line" data-map-id="struktur-class" onmouseenter="highlightPair('struktur-class')" onmouseleave="clearHighlight()">        self.nama = nama</span>
+<span class="code-line" data-map-id="akses-data" onmouseenter="highlightPair('akses-data')" onmouseleave="clearHighlight()">        self.__password = password</span>
+<span class="code-line" data-map-id="method" onmouseenter="highlightPair('method')" onmouseleave="clearHighlight()">    def get_password(self):</span>
+<span class="code-line" data-map-id="akses-data" onmouseenter="highlightPair('akses-data')" onmouseleave="clearHighlight()">        return self.__password</span>
+<span class="code-line" data-map-id="method" onmouseenter="highlightPair('method')" onmouseleave="clearHighlight()">    def set_password(self, password_baru):</span>
+<span class="code-line" data-map-id="akses-data" onmouseenter="highlightPair('akses-data')" onmouseleave="clearHighlight()">        self.__password = password_baru</span>
+<span class="code-line" data-map-id="pewarisan" onmouseenter="highlightPair('pewarisan')" onmouseleave="clearHighlight()">class Guru(AkunSekolah):</span>
+<span class="code-line" data-map-id="pewarisan" onmouseenter="highlightPair('pewarisan')" onmouseleave="clearHighlight()">    def __init__(self, nama, password, mata_pelajaran):</span>
+<span class="code-line" data-map-id="pewarisan" onmouseenter="highlightPair('pewarisan')" onmouseleave="clearHighlight()">        super().__init__(nama, password)</span>
+<span class="code-line" data-map-id="struktur-class" onmouseenter="highlightPair('struktur-class')" onmouseleave="clearHighlight()">        self.mata_pelajaran = mata_pelajaran</span>
+<span class="code-line" data-map-id="method" onmouseenter="highlightPair('method')" onmouseleave="clearHighlight()">    def info(self):</span>
+<span class="code-line" data-map-id="method" onmouseenter="highlightPair('method')" onmouseleave="clearHighlight()">        print("Guru:", self.nama, "- Mapel:", self.mata_pelajaran)</span></code></pre>
                         </div>
 
                     </div>
@@ -486,9 +567,7 @@
 <script>
 // ═════════════════════════════════════════════════════════════════════════════
 // GERBANG MATERI — tandai "sudah buka Materi" ke server, lalu buka toolbox
-// tanpa perlu reload halaman. Fire-and-forget: tidak menunggu tab /lesson
-// selesai dimuat, dan link tetap jalan normal via href/target="_blank" walau
-// fetch ini gagal.
+// tanpa perlu reload halaman.
 // ═════════════════════════════════════════════════════════════════════════════
 function tandaiMateriDibuka(pertemuan) {
   fetch('{{ route("materi.tandai-dibuka") }}', {
@@ -505,6 +584,7 @@ function tandaiMateriDibuka(pertemuan) {
 
 // ═════════════════════════════════════════════════════════════════════════════
 // BLOCK SHAPE ENGINE  (Scratch-style puzzle-piece SVG path generation)
+// Disalin persis dari fase3.blade.php Pertemuan 1 — generik, tidak spesifik domain
 // ═════════════════════════════════════════════════════════════════════════════
 
 const BH = 36;   // block body height (px)
@@ -513,20 +593,12 @@ const NX = 18;   // notch start x
 const NW = 20;   // notch width
 const CR = 5;    // corner radius
 
-/**
- * Generate the SVG path data for one Scratch-style block.
- * @param {number} W      - block width
- * @param {boolean} top   - include top notch (female connector)
- * @param {boolean} bot   - include bottom bump (male connector)
- */
 function scratchPath(W, top, bot) {
     const H = BH;
     let d = '';
 
-    // ── Top edge ──────────────────────────────────────────────────────────
     d += `M ${CR} 0 `;
     if (top) {
-        // top notch: indent DOWN into block
         d += `L ${NX} 0 `;
         d += `L ${NX} ${NH} `;
         d += `L ${NX + NW} ${NH} `;
@@ -534,12 +606,9 @@ function scratchPath(W, top, bot) {
     }
     d += `L ${W - CR} 0 Q ${W} 0 ${W} ${CR} `;
 
-    // ── Right edge ────────────────────────────────────────────────────────
     d += `L ${W} ${H - CR} Q ${W} ${H} ${W - CR} ${H} `;
 
-    // ── Bottom edge ───────────────────────────────────────────────────────
     if (bot) {
-        // bottom bump: protrude DOWN below block
         d += `L ${NX + NW} ${H} `;
         d += `L ${NX + NW} ${H + NH} `;
         d += `L ${NX} ${H + NH} `;
@@ -547,29 +616,18 @@ function scratchPath(W, top, bot) {
     }
     d += `L ${CR} ${H} Q 0 ${H} 0 ${H - CR} `;
 
-    // ── Left edge back to start ───────────────────────────────────────────
     d += `L 0 ${CR} Q 0 0 ${CR} 0 Z`;
 
     return d;
 }
 
-/**
- * Render a block as an HTML element with SVG background + HTML content overlay.
- * @param {object} blk       - block data object
- * @param {number} W         - pixel width of block
- * @param {boolean} hasTop   - whether to show top notch
- * @param {boolean} hasBot   - whether to show bottom bump
- * @param {string|null} rmId - if set, renders a remove button calling removeBlock(rmId)
- */
 function makeBlockEl(blk, W, hasTop, hasBot, rmId = null) {
     const totalH = BH + (hasBot ? NH : 0);
     const d      = scratchPath(W, hasTop, hasBot);
 
-    // darken shade for block bottom highlight
     const shade  = 'rgba(0,0,0,0.28)';
     const shine  = 'rgba(255,255,255,0.18)';
 
-    // SVG element (background shape)
     const svgNS  = 'http://www.w3.org/2000/svg';
     const svg    = document.createElementNS(svgNS, 'svg');
     svg.setAttribute('width',   W);
@@ -585,7 +643,6 @@ function makeBlockEl(blk, W, hasTop, hasBot, rmId = null) {
     pathEl.setAttribute('filter',       'url(#blk-shadow)');
     svg.appendChild(pathEl);
 
-    // Shine line (top inner highlight)
     const shineLine = document.createElementNS(svgNS, 'path');
     const shineTop  = hasTop ? NH + 1 : 2;
     shineLine.setAttribute('d',      `M ${CR + 2} ${shineTop} L ${W - CR - 2} ${shineTop}`);
@@ -594,7 +651,6 @@ function makeBlockEl(blk, W, hasTop, hasBot, rmId = null) {
     shineLine.setAttribute('stroke-linecap', 'round');
     svg.appendChild(shineLine);
 
-    // Content overlay (HTML, positioned on top of SVG)
     const content = document.createElement('div');
     const topPad  = hasTop ? NH : 0;
     content.style.cssText = `
@@ -645,7 +701,6 @@ function makeBlockEl(blk, W, hasTop, hasBot, rmId = null) {
         content.appendChild(rmBtn);
     }
 
-    // Wrapper (positioned container for SVG + content)
     const wrap = document.createElement('div');
     wrap.style.cssText = `
         position: relative;
@@ -660,51 +715,42 @@ function makeBlockEl(blk, W, hasTop, hasBot, rmId = null) {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// BLOCK DATA
+// BLOCK DATA — domain AkunSekolah / Guru / Siswa (Enkapsulasi + Inheritance)
+// Opsi B: TIDAK ada kategori Kondisi — fokus murni private+getter/setter+pewarisan
 // ═════════════════════════════════════════════════════════════════════════════
 
 const BLOCKS = {
     struktur: [
-        { id:'class', label:'class BankAccount:',  icon:'📦', color:'#4C97FF', tag:'Class'  },
-        { id:'init',  label:'def __init__(self):', icon:'⚙️', color:'#3d82e0', tag:'Init'   },
-        { id:'pass',  label:'pass',                 icon:'–',  color:'#475569', tag:'Pass'   },
+        { id:'class', label:'class AkunSekolah:',                 icon:'📦', color:'#4C97FF', tag:'Class' },
+        { id:'init',  label:'def __init__(self, nama, password):', icon:'⚙️', color:'#3d82e0', tag:'Init'  },
+        { id:'pass',  label:'pass',                                  icon:'–',  color:'#475569', tag:'Pass'  },
+    ],
+    pewarisan: [
+        { id:'extends', label:'class Guru(AkunSekolah):',        icon:'🧬', color:'#db2777', tag:'ChildClass' },
+        { id:'super',   label:'super().__init__(nama, password)', icon:'🔗', color:'#be185d', tag:'SuperInit'  },
     ],
     akses: [
-        { id:'private',   label:'self.__saldo = 0',   icon:'🔒', color:'#9333ea', tag:'Private'   },
-        { id:'protected', label:'self._pemilik = ""', icon:'🛡️', color:'#7c3aed', tag:'Protected' },
-        { id:'public',    label:'self.nama = ""',     icon:'🔓', color:'#6d28d9', tag:'Public'    },
+        { id:'private', label:'self.__password = password', icon:'🔒', color:'#9333ea', tag:'Private' },
     ],
     method: [
-        { id:'getter', label:'def get_saldo(self):',    icon:'⬅️', color:'#ea580c', tag:'Getter' },
-        { id:'setter', label:'def set_saldo(self, v):', icon:'➡️', color:'#dc4e08', tag:'Setter' },
-        { id:'method', label:'def info(self):',          icon:'💬', color:'#c2410c', tag:'Method' },
-    ],
-    nilai: [
-        { id:'return', label:'return self.__saldo', icon:'↩️', color:'#16a34a', tag:'Return' },
-        { id:'assign', label:'self.__saldo = v',    icon:'✏️', color:'#15803d', tag:'Assign' },
-        { id:'print',  label:'print(self.__saldo)', icon:'🖨️', color:'#166534', tag:'Print'  },
-    ],
-    kondisi: [
-        { id:'if',   label:'if v < 0:', icon:'🔀', color:'#FFAB19', tag:'If'   },
-        { id:'else', label:'else:',     icon:'↪️', color:'#E6960E', tag:'Else' },
+        { id:'getter', label:'def get_password(self):',            icon:'⬅️', color:'#ea580c', tag:'Getter' },
+        { id:'setter', label:'def set_password(self, password_baru):', icon:'➡️', color:'#dc4e08', tag:'Setter' },
+        { id:'info',   label:'def info(self):',                    icon:'💬', color:'#c2410c', tag:'Method' },
     ],
 };
 
 const CAT_COLORS = {
-    struktur:'#4C97FF', akses:'#9333ea', method:'#ea580c', nilai:'#16a34a', kondisi:'#FFAB19',
+    struktur:'#4C97FF', pewarisan:'#db2777', akses:'#9333ea', method:'#ea580c',
 };
 
 let wsItems    = [];
 let currentCat = 'struktur';
 
-// Width of palette blocks (toolbox inner width - 2*12px padding)
 const PW = 240;
-
-// Width of workspace blocks (computed after first render)
 let wsBlockW = 380;
 
 // ═════════════════════════════════════════════════════════════════════════════
-// CATEGORY / PALETTE
+// CATEGORY / PALETTE — disalin persis dari fase3.blade.php Pertemuan 1
 // ═════════════════════════════════════════════════════════════════════════════
 
 function setCategory(cat) {
@@ -722,9 +768,9 @@ function renderPalette() {
     palette.innerHTML = '';
 
     BLOCKS[currentCat].forEach(blk => {
-        const wrap = makeBlockEl(blk, PW, true, true); // notch + bump
+        const wrap = makeBlockEl(blk, PW, true, true);
         wrap.classList.add('s-block-wrap');
-        wrap.style.marginBottom = '10px'; // gap between palette blocks
+        wrap.style.marginBottom = '10px';
 
         wrap.onclick     = () => addBlock(blk);
         wrap.draggable   = true;
@@ -735,13 +781,13 @@ function renderPalette() {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// WORKSPACE
+// WORKSPACE — disalin persis dari fase3.blade.php Pertemuan 1
 // ═════════════════════════════════════════════════════════════════════════════
 
 function calcWsBlockW() {
     const zone = document.getElementById('wsDropZone');
     if (zone && zone.clientWidth > 60) {
-        wsBlockW = Math.max(180, zone.clientWidth - 48); // 20px padding + 22px lineNo + 6px gap
+        wsBlockW = Math.max(180, zone.clientWidth - 48);
     }
 }
 
@@ -790,7 +836,6 @@ function renderWorkspace() {
     const W = wsBlockW;
 
     wsItems.forEach((blk, i) => {
-        // Row container: height = body only, bump protrudes below via overflow:visible
         const row = document.createElement('div');
         row.style.cssText = `
             display: flex;
@@ -799,7 +844,6 @@ function renderWorkspace() {
             height: ${BH}px;
             overflow: visible;
         `;
-        // All rows after the first shift up by NH so block bumps slot into next block's notch
         if (i > 0) row.style.marginTop = `-${NH}px`;
 
         const lineNo = document.createElement('span');
@@ -838,28 +882,35 @@ function clearOutput() {
     document.getElementById('lanjutBox').style.display  = 'none';
 }
 
+// ═════════════════════════════════════════════════════════════════════════════
+// RUN — validasi Gabungan Enkapsulasi+Inheritance (deteksi kelengkapan tag,
+// bukan urutan/kebenaran). Opsi B: TIDAK mewajibkan tag Kondisi/If.
+// ═════════════════════════════════════════════════════════════════════════════
+
 function runProgram() {
-    const tags      = wsItems.map(b => b.tag);
-    const hasClass  = tags.includes('Class');
-    const hasPriv   = tags.includes('Private');
-    const hasGetter = tags.includes('Getter');
-    const hasSetter = tags.includes('Setter');
-    const hasIf     = tags.includes('If');
+    const tags          = wsItems.map(b => b.tag);
+    const hasClass      = tags.includes('Class');
+    const hasPriv       = tags.includes('Private');
+    const hasGetter     = tags.includes('Getter');
+    const hasSetter     = tags.includes('Setter');
+    const hasChildClass = tags.includes('ChildClass');
+    const hasSuperInit  = tags.includes('SuperInit');
 
     document.getElementById('outEmpty').style.display = 'none';
 
-    if (hasClass && hasPriv && hasGetter && hasSetter && hasIf) {
+    if (hasClass && hasPriv && hasGetter && hasSetter && hasChildClass && hasSuperInit) {
         document.getElementById('outSuccess').style.display = 'block';
         document.getElementById('outFail').style.display    = 'none';
         document.getElementById('lanjutBox').style.display  = 'block';
         document.querySelector('#lanjutBox button[type="submit"]').classList.add('btn-pulse');
     } else {
         const missing = [];
-        if (!hasClass)  missing.push('class');
-        if (!hasPriv)   missing.push('atribut private');
-        if (!hasGetter) missing.push('getter');
-        if (!hasSetter) missing.push('setter');
-        if (!hasIf)     missing.push('validasi (if) untuk mengecek jumlah sebelum mengubah saldo');
+        if (!hasClass)      missing.push('class induk (AkunSekolah)');
+        if (!hasPriv)       missing.push('atribut private (__password)');
+        if (!hasGetter)     missing.push('getter');
+        if (!hasSetter)     missing.push('setter');
+        if (!hasChildClass) missing.push('class anak yang mewarisi (Guru)');
+        if (!hasSuperInit)  missing.push('pemanggilan super().__init__()');
 
         document.getElementById('outFail').style.display    = 'block';
         document.getElementById('outFailMsg').innerHTML     =
@@ -874,6 +925,7 @@ function runProgram() {
 
 // ═════════════════════════════════════════════════════════════════════════════
 // MAPPING VIEW (Blok ↔ Sintaks Python — visualisasi statis, bukan generator)
+// Disalin persis dari fase3.blade.php Pertemuan 1
 // ═════════════════════════════════════════════════════════════════════════════
 
 function openMappingView() {

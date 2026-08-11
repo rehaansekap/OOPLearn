@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Materi extends Model
 {
-    protected $fillable = ['title', 'content', 'video_path', 'video_url', 'color', 'sort_order'];
+    protected $fillable = ['title', 'content', 'video_path', 'video_url', 'pdf_path', 'color', 'sort_order'];
 
     /**
      * Ubah berbagai format URL YouTube (watch, youtu.be, embed) jadi URL embed.

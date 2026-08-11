@@ -302,6 +302,63 @@
             </div>
 
             {{-- ════════════════════════════════════════
+                 PAGE: JAWABAN FASE 2
+            ════════════════════════════════════════ --}}
+            <div x-show="page === 'jawaban-fase2'"
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 translate-y-2"
+                 x-transition:enter-end="opacity-100 translate-y-0">
+
+                <div class="mb-6">
+                    <h2 class="text-2xl font-extrabold text-gray-800">Jawaban Fase 2 — Pencetusan Ide</h2>
+                    <p class="text-sm text-gray-400 mt-1">Refleksi tertulis siswa dari Pertemuan 1, Fase 2. Fase 2 di Pertemuan 2 &amp; 3 belum mengumpulkan jawaban tertulis.</p>
+                </div>
+
+                @php
+                    $fase2Questions = [
+                        ['q' => 'Bagaimana caranya barang berharga di dunia nyata dilindungi dari orang lain? Coba hubungkan dengan masalah akun1.saldo = -1000 tadi.', 'type' => 'text'],
+                        ['q' => 'Menurutmu, kenapa kode akun1.saldo = -1000 di Fase 1 tadi bisa berhasil dijalankan?', 'type' => 'text'],
+                        ['q' => 'Kalau kamu jadi programmer bank itu, apa yang akan kamu lakukan supaya kejadian itu tidak terulang?', 'type' => 'text'],
+                        ['q' => 'Seberapa yakin kamu dengan jawabanmu tadi?', 'type' => 'single'],
+                    ];
+                @endphp
+
+                <div class="space-y-4">
+                    @forelse($fase2Jawaban as $j)
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                            <div class="flex items-center gap-2.5 pb-4 mb-4 border-b border-gray-100">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($j->user->name) }}&background=e0e7ff&color=4338ca&size=32"
+                                     class="w-8 h-8 rounded-full shrink-0">
+                                <div class="min-w-0 flex-1">
+                                    <p class="text-sm font-semibold text-gray-800 truncate">{{ $j->user->name }}</p>
+                                    <p class="text-[11px] text-gray-400">Disubmit {{ $j->created_at->format('d M Y, H:i') }}</p>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                @foreach($fase2Questions as $i => $fq)
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 mb-1.5">{{ $i + 1 }}. {{ $fq['q'] }}</p>
+                                    @if($fq['type'] === 'single')
+                                        <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-600">
+                                            {{ $j->jawaban[$i] ?? '–' }}
+                                        </span>
+                                    @else
+                                        <p class="text-sm text-gray-700 bg-gray-50 border border-gray-100 rounded-lg p-3 leading-relaxed whitespace-pre-line">{{ $j->jawaban[$i] ?? '–' }}</p>
+                                    @endif
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @empty
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 text-center text-gray-300 text-sm">
+                            Belum ada siswa yang mengisi Fase 2.
+                        </div>
+                    @endforelse
+                </div>
+
+            </div>
+
+            {{-- ════════════════════════════════════════
                  PAGE: KELOLA MATERI
             ════════════════════════════════════════ --}}
             <div x-show="page === 'materi'"
@@ -366,6 +423,12 @@
                                            class="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border file:border-gray-200 file:text-xs file:font-medium file:bg-gray-50 file:text-gray-600 hover:file:bg-gray-100 file:transition cursor-pointer">
                                     <p class="text-[11px] text-gray-400 mt-1">MP4, WebM, MOV · Maks. 200 MB</p>
                                 </div>
+                                <div class="mb-5">
+                                    <label class="block text-xs font-medium text-gray-600 mb-1">Upload PDF (Materi/PPT)</label>
+                                    <input type="file" name="pdf" accept="application/pdf"
+                                           class="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border file:border-gray-200 file:text-xs file:font-medium file:bg-gray-50 file:text-gray-600 hover:file:bg-gray-100 file:transition cursor-pointer">
+                                    <p class="text-[11px] text-gray-400 mt-1">Kalau presentasimu masih format PPT, export dulu ke PDF sebelum diunggah. PDF · Maks. 20 MB</p>
+                                </div>
                                 <div class="flex gap-2">
                                     <button type="submit"
                                             class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition">
@@ -423,6 +486,18 @@
                                            class="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border file:border-gray-200 file:text-xs file:font-medium file:bg-gray-50 file:text-gray-600 hover:file:bg-gray-100 file:transition cursor-pointer">
                                     <p class="text-[11px] text-gray-400 mt-1">Kosongkan jika tidak ingin mengganti video. MP4, WebM, MOV · Maks. 200 MB</p>
                                 </div>
+                                <div class="mb-5">
+                                    <label class="block text-xs font-medium text-gray-600 mb-1">Upload PDF (Materi/PPT)</label>
+                                    @if($m->pdf_path)
+                                    <p class="text-xs text-gray-500 mb-1.5">PDF saat ini: <span class="font-medium">{{ basename($m->pdf_path) }}</span></p>
+                                    <label class="inline-flex items-center gap-1.5 text-xs text-gray-500 mb-2 cursor-pointer">
+                                        <input type="checkbox" name="remove_pdf" value="1"> Hapus PDF yang ada
+                                    </label><br>
+                                    @endif
+                                    <input type="file" name="pdf" accept="application/pdf"
+                                           class="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border file:border-gray-200 file:text-xs file:font-medium file:bg-gray-50 file:text-gray-600 hover:file:bg-gray-100 file:transition cursor-pointer">
+                                    <p class="text-[11px] text-gray-400 mt-1">Kosongkan jika tidak ingin mengganti PDF. Kalau presentasimu masih format PPT, export dulu ke PDF. Maks. 20 MB</p>
+                                </div>
                                 <div class="flex gap-2">
                                     <button type="submit"
                                             class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition">
@@ -468,6 +543,7 @@
                                     <th class="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wide">Judul</th>
                                     <th class="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wide">Isi Materi</th>
                                     <th class="text-center px-4 py-3 font-semibold text-xs uppercase tracking-wide">Video</th>
+                                    <th class="text-center px-4 py-3 font-semibold text-xs uppercase tracking-wide">PDF</th>
                                     <th class="text-right px-4 py-3 rounded-r-xl font-semibold text-xs uppercase tracking-wide">Aksi</th>
                                 </tr>
                             </thead>
@@ -500,6 +576,13 @@
                                             <span class="text-xs text-gray-300">—</span>
                                         @endif
                                     </td>
+                                    <td class="px-4 py-3 text-center">
+                                        @if($materi->pdf_path)
+                                            <a href="{{ Storage::url($materi->pdf_path) }}" target="_blank" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium underline">Lihat</a>
+                                        @else
+                                            <span class="text-xs text-gray-300">—</span>
+                                        @endif
+                                    </td>
                                     <td class="px-4 py-3 text-right">
                                         <div class="inline-flex items-center gap-3">
                                             <button @click="openEdit({ id: {{ $materi->id }}, title: {{ Js::from($materi->title) }}, content: {{ Js::from($materi->content ?? '') }}, color: '{{ $materi->color }}' })"
@@ -517,7 +600,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="5" class="px-4 py-10 text-center text-gray-300 text-sm">
+                                    <td colspan="6" class="px-4 py-10 text-center text-gray-300 text-sm">
                                         Belum ada materi. Klik <span class="font-semibold text-indigo-500">Tambah Materi</span> untuk mulai menambahkan.
                                     </td>
                                 </tr>

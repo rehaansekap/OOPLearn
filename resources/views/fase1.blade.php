@@ -122,10 +122,14 @@
 
                 <!-- Navigation Button -->
                 <div class="absolute bottom-8 right-8">
-                    <a href="{{ route('fase2') }}" class="btn-pulse inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl font-semibold text-sm transition shadow-sm">
-                        Lanjut
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                    </a>
+                    <!-- PENTING: JANGAN ubah ini kembali jadi <a href> biasa. Tombol ini WAJIB berupa <form method="POST"> ke route fase1.complete, karena tombol inilah satu-satunya cara kolom 'fase1' di database menjadi true. Kalau diubah jadi <a> biasa, middleware EnsureFaseUnlocked akan mengunci SEMUA siswa baru dari mengakses Fase 2 selamanya. Sudah terjadi 3× (lihat riwayat git jika ada). -->
+                    <form method="POST" action="{{ route('fase1.complete') }}">
+                        @csrf
+                        <button type="submit" class="btn-pulse inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl font-semibold text-sm transition shadow-sm">
+                            Lanjut
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        </button>
+                    </form>
                 </div>
             </div>
             </div>
