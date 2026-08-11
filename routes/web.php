@@ -67,6 +67,15 @@ Route::get('/dashboard-guru', function () {
                 ->with(['learningProgress', 'score'])
                 ->get();
 
+    // Jawaban Fase 2 (Pertemuan 1) — satu siswa bisa submit lebih dari sekali kalau mengulang,
+    // jadi ambil submission terbaru per siswa saja.
+    $fase2Jawaban = \App\Models\Fase2Jawaban::with('user')
+        ->where('pertemuan', 1)
+        ->latest()
+        ->get()
+        ->unique('user_id')
+        ->values();
+
     return view('dashboardGuru', [
         'siswas'            => $siswas,
         'totalSiswa'        => $siswas->count(),
@@ -76,6 +85,7 @@ Route::get('/dashboard-guru', function () {
         'pretestTime'       => AssessmentSetting::timeLimitFor('pretest'),
         'posttestTime'      => AssessmentSetting::timeLimitFor('posttest'),
         'materis'           => Materi::orderBy('sort_order')->get(),
+        'fase2Jawaban'      => $fase2Jawaban,
     ]);
 })->middleware('auth')->name('dashboard.guru');
 
@@ -111,7 +121,7 @@ Route::middleware(['auth'])->group(function () {
     */
 
     Route::get('/dashboard-siswa', function () {
-        $progress = \App\Models\LearningProgress::where('user_id', Auth::id())->first();
+        $progress = \App\Models\LearningProgress::firstOrCreate(['user_id' => Auth::id()]);
 
         // Helper: hitung fase selesai secara sequential per pertemuan (berhenti di gap pertama)
         $seqCount = function (array $keys) use ($progress): int {
@@ -133,6 +143,7 @@ Route::middleware(['auth'])->group(function () {
         $progressPct = (int)round($totalDone / 15 * 100);
 
         return view('dashboardSiswa', [
+            'progress'    => $progress,
             'p1Done'      => $p1Done,
             'p2Done'      => $p2Done,
             'p3Done'      => $p3Done,
@@ -164,16 +175,38 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/lesson', [MateriController::class, 'showLesson'])->name('lesson');
 
+    // Dipanggil via fetch() saat siswa klik "Buka Materi" dari halaman Fase 3 —
+    // menandai gerbang toolbox Fase 3 pertemuan itu terbuka. Fire-and-forget,
+    // tidak menunggu tab baru /lesson selesai dimuat.
+    Route::post('/materi/tandai-dibuka', function (Request $request) {
+        $data = $request->validate(['pertemuan' => 'required|in:1,2,3']);
+
+        $progress = \App\Models\LearningProgress::firstOrCreate(['user_id' => Auth::id()]);
+        $progress->tandaiMateriDibuka((int) $data['pertemuan']);
+
+        return response()->json(['ok' => true]);
+    })->name('materi.tandai-dibuka');
+
     /*
     |--------------------------------------------------------------------------
     | Activity (Needham)
     |--------------------------------------------------------------------------
     */
 
-    Route::view('/fase1', 'fase1')->name('fase1');
-    Route::view('/fase2', 'fase2')->name('fase2');
-    Route::view('/fase3', 'fase3')->name('fase3');
-    Route::get('/fase4', [BlueprintController::class, 'enkapsulasi'])->name('fase4');
+    Route::get('/fase1', function () {
+        $progress = \App\Models\LearningProgress::firstOrCreate(['user_id' => Auth::id()]);
+        if (!$progress->pretestSelesai()) {
+            return redirect()->route('dashboard.siswa')
+                ->with('lock_message', 'Kerjakan Pretest terlebih dahulu sebelum memulai pembelajaran.');
+        }
+        return view('fase1');
+    })->name('fase1')->middleware('fase.unlocked:1,1');
+    Route::view('/fase2', 'fase2')->name('fase2')->middleware('fase.unlocked:1,2');
+    Route::get('/fase3', function () {
+        $progress = \App\Models\LearningProgress::firstOrCreate(['user_id' => Auth::id()]);
+        return view('fase3', ['materiDibuka' => $progress->materiDibuka(1)]);
+    })->name('fase3')->middleware('fase.unlocked:1,3');
+    Route::get('/fase4', [BlueprintController::class, 'enkapsulasi'])->name('fase4')->middleware('fase.unlocked:1,4');
     Route::view('/fase4baru', 'fase4baru')->name('fase4baru');
     Route::get('/fase5', function () {
         $fase2 = \App\Models\Fase2Jawaban::where('user_id', Auth::id())
@@ -182,7 +215,7 @@ Route::middleware(['auth'])->group(function () {
             ->first();
 
         return view('fase5', ['jawabanFase2' => $fase2?->jawaban]);
-    })->name('fase5');
+    })->name('fase5')->middleware('fase.unlocked:1,5');
 
     /*
     |--------------------------------------------------------------------------
@@ -191,21 +224,26 @@ Route::middleware(['auth'])->group(function () {
     */
 
     Route::prefix('pertemuan-2')->name('p2.')->group(function () {
-        $faseNames = ['Orientasi', 'Pencetusan Ide', 'Penstrukturan Ide', 'Aplikasi', 'Refleksi'];
+        // Fase 1, 2, 3 & 5 diekstrak ke view mandiri — tidak ada lagi yang
+        // dirender lewat pertemuan-fase.blade.php untuk Pertemuan 2.
+        Route::view('/fase1', 'fase1-inheritance')->name('fase1')->middleware('fase.unlocked:2,1');
+        Route::view('/fase2', 'fase2-inheritance')->name('fase2')->middleware('fase.unlocked:2,2');
+        Route::get('/fase3', function () {
+            $progress = \App\Models\LearningProgress::firstOrCreate(['user_id' => Auth::id()]);
+            return view('fase3-inheritance', ['materiDibuka' => $progress->materiDibuka(2)]);
+        })->name('fase3')->middleware('fase.unlocked:2,3');
+        Route::get('/fase4', [BlueprintController::class, 'inheritance'])->name('fase4')->middleware('fase.unlocked:2,4');
 
-        foreach ([1, 2, 3, 5] as $f) {
-            Route::get("/fase{$f}", function () use ($f, $faseNames) {
-                return view('pertemuan-fase', [
-                    'pertemuan' => 2,
-                    'fase'      => $f,
-                    'faseNama'  => $faseNames[$f - 1],
-                    'topikNama' => 'Inheritance',
-                    'warna'     => 'blue',
-                    'warnaHex'  => '#2563eb',
-                ]);
-            })->name("fase{$f}");
-        }
-        Route::get('/fase4', [BlueprintController::class, 'inheritance'])->name('fase4');
+        Route::get('/fase5', function () {
+            $fase2 = \App\Models\Fase2Jawaban::where('user_id', Auth::id())
+                ->where('pertemuan', 2)
+                ->latest()
+                ->first();
+
+            return view('fase5-inheritance', ['jawabanFase2' => $fase2?->jawaban]);
+        })->name('fase5')->middleware('fase.unlocked:2,5');
+
+        Route::post('/fase5/store', [Fase5Controller::class, 'store'])->name('fase5.store');
     });
 
     /*
@@ -217,7 +255,9 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('pertemuan-3')->name('p3.')->group(function () {
         $faseNames = ['Orientasi', 'Pencetusan Ide', 'Penstrukturan Ide', 'Aplikasi', 'Refleksi'];
 
-        foreach ([1, 2, 3, 5] as $f) {
+        // Fase 3 diekstrak ke view mandiri (sistem block programming Gabungan) —
+        // JANGAN dimasukkan lagi ke foreach di bawah, sudah punya route sendiri.
+        foreach ([1, 2, 5] as $f) {
             Route::get("/fase{$f}", function () use ($f, $faseNames) {
                 return view('pertemuan-fase', [
                     'pertemuan' => 3,
@@ -227,9 +267,13 @@ Route::middleware(['auth'])->group(function () {
                     'warna'     => 'purple',
                     'warnaHex'  => '#9333ea',
                 ]);
-            })->name("fase{$f}");
+            })->name("fase{$f}")->middleware("fase.unlocked:3,{$f}");
         }
-        Route::get('/fase4', [BlueprintController::class, 'gabungan'])->name('fase4');
+        Route::get('/fase3', function () {
+            $progress = \App\Models\LearningProgress::firstOrCreate(['user_id' => Auth::id()]);
+            return view('fase3-gabungan', ['materiDibuka' => $progress->materiDibuka(3)]);
+        })->name('fase3')->middleware('fase.unlocked:3,3');
+        Route::get('/fase4', [BlueprintController::class, 'gabungan'])->name('fase4')->middleware('fase.unlocked:3,4');
     });
 
     /*
@@ -287,7 +331,13 @@ Route::middleware(['auth'])->group(function () {
         return redirect()->route('p2.fase2');
     })->name('p2.fase1.complete');
 
-    Route::post('/pertemuan-2/fase2/complete', function () {
+    Route::post('/pertemuan-2/fase2/complete', function (Request $request) {
+        \App\Models\Fase2Jawaban::create([
+            'user_id'   => Auth::id(),
+            'pertemuan' => 2,
+            'jawaban'   => json_decode($request->input('jawaban'), true),
+        ]);
+
         $p = \App\Models\LearningProgress::firstOrCreate(['user_id' => Auth::id()]);
         $p->p2_fase1 = true; $p->p2_fase2 = true;
         $p->save();
@@ -308,13 +358,8 @@ Route::middleware(['auth'])->group(function () {
         return redirect()->route('p2.fase5');
     })->name('p2.fase4.complete');
 
-    Route::post('/pertemuan-2/fase5/complete', function () {
-        $p = \App\Models\LearningProgress::firstOrCreate(['user_id' => Auth::id()]);
-        $p->p2_fase1 = true; $p->p2_fase2 = true; $p->p2_fase3 = true;
-        $p->p2_fase4 = true; $p->p2_fase5 = true;
-        $p->save();
-        return redirect()->route('dashboard.siswa');
-    })->name('p2.fase5.complete');
+    // p2.fase5.complete dihapus — digantikan Fase5Controller::store() (route p2.fase5.store)
+    // yang sekaligus menyimpan Reflection dan menandai p2_fase1..5 selesai.
 
     /*
     |--------------------------------------------------------------------------

@@ -275,28 +275,7 @@ textarea.pred-input:focus{outline:none;border-color:var(--amber);}
 .tl-line{height:1px;background:var(--border);flex:1;min-width:5px;}
 .tl-line.done{background:var(--faint);}
 .ctrl-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
-#floatNext,#floatPrev{
-  position:fixed;top:50%;z-index:300;
-  width:48px;height:48px;border-radius:50%;
-  font-size:22px;font-weight:700;line-height:1;
-  border:none;cursor:pointer;display:none;
-  align-items:center;justify-content:center;
-  transition:.15s;
-}
-#floatNext{
-  right:24px;transform:translateY(-50%);
-  background:var(--amber);color:#1a0e00;
-  box-shadow:0 4px 20px rgba(217,119,6,.45);
-}
-#floatPrev{
-  right:80px;transform:translateY(-50%);
-  background:var(--panel);color:var(--text);
-  border:1.5px solid var(--border);
-  box-shadow:0 4px 16px rgba(0,0,0,.18);
-}
-#floatNext:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-50%) scale(1.08);}
-#floatPrev:hover:not(:disabled){border-color:var(--amber);color:var(--amber);transform:translateY(-50%) scale(1.08);}
-#floatNext:disabled,#floatPrev:disabled{opacity:.22;cursor:not-allowed;}
+#floatNext,#floatPrev{display:none;}
 #floatLanjut{
   position:fixed;bottom:24px;right:24px;z-index:301;
   display:none;align-items:center;gap:8px;
@@ -330,10 +309,9 @@ textarea.pred-input:focus{outline:none;border-color:var(--amber);}
 .kb-title.enc{color:var(--rose);}
 .kb-title.inh{color:var(--violet);}
 .kb-desc{font-size:12.5px;color:var(--dim);line-height:1.5;}
-.kb-back{margin-left:auto;font-size:12px;color:var(--faint);text-decoration:none;flex-shrink:0;padding:6px 12px;border:1px solid var(--border);border-radius:7px;transition:.15s;}
-.kb-back:hover{color:var(--text);border-color:#3a4254;text-decoration:none;}
-.kb-guide{font-size:12px;color:var(--faint);flex-shrink:0;padding:6px 12px;border:1px solid var(--border);border-radius:7px;background:transparent;cursor:pointer;transition:.15s;font-family:var(--sans);}
-.kb-guide:hover{color:var(--text);border-color:#3a4254;}
+.kb-actions{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0;flex-wrap:wrap;}
+.kb-action-btn{font-size:12px;font-weight:600;color:var(--text);text-decoration:none;padding:7px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--panel);cursor:pointer;transition:.15s;font-family:var(--sans);display:inline-flex;align-items:center;gap:6px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.kb-action-btn:hover{border-color:var(--amber);color:var(--amber);background:var(--amber-bg);text-decoration:none;}
 
 /* ─── ACCESS MODIFIER TEST PANEL ─────────── */
 .access-ctx-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
@@ -416,8 +394,6 @@ textarea.pred-input:focus{outline:none;border-color:var(--amber);}
 .ob-nav{display:flex;gap:8px;}
 
 /* ─── GLOSSARY ──────────────────────────────── */
-.glossary-fab{position:fixed;bottom:24px;left:24px;z-index:400;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:8px 14px;font-size:12px;cursor:pointer;color:var(--dim);display:flex;align-items:center;gap:7px;transition:.15s;box-shadow:0 2px 12px rgba(0,0,0,.3);}
-.glossary-fab:hover{color:var(--text);border-color:#3a4254;}
 .glossary-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:500;align-items:center;justify-content:center;padding:20px;}
 .glossary-modal.open{display:flex;}
 .glossary-box{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:22px 20px;width:100%;max-width:540px;max-height:80vh;display:flex;flex-direction:column;animation:fadeSlide .2s ease;}
@@ -464,10 +440,9 @@ textarea.pred-input:focus{outline:none;border-color:var(--amber);}
 /* ─── MOBILE ────────────────────────────────── */
 @media(max-width:600px){
   .content{padding:16px 12px 60px;}
-  .konsep-banner{flex-wrap:wrap;}.kb-back{margin-left:0;}
+  .konsep-banner{flex-wrap:wrap;}.kb-actions{margin-left:0;width:100%;}
   .phase-step span{display:none;}
   .preset-grid{grid-template-columns:1fr 1fr;}
-  .glossary-fab{bottom:14px;left:14px;padding:6px 10px;font-size:11px;}
   .sim-grid{grid-template-columns:1fr;}
 }
 @media(max-width:400px){.preset-grid{grid-template-columns:1fr;}}
@@ -508,8 +483,11 @@ textarea.pred-input:focus{outline:none;border-color:var(--amber);}
     <div class="kb-title enc">Enkapsulasi (Encapsulation)</div>
     <div class="kb-desc">Rancang class dengan atribut privat (<code style="font-family:var(--mono);font-size:11px;background:rgba(0,0,0,.3);padding:1px 5px;border-radius:3px;">__attr</code>) dan protected (<code style="font-family:var(--mono);font-size:11px;background:rgba(0,0,0,.3);padding:1px 5px;border-radius:3px;">_attr</code>), lalu tambahkan getter &amp; setter sebagai pintu akses data yang aman.</div>
   </div>
-  <button class="kb-guide" onclick="showOnboarding()">? Panduan</button>
-  <a href="{{ $backRoute ?? route('home') }}" class="kb-back">{{ $backLabel ?? '← Beranda' }}</a>
+  <div class="kb-actions">
+    <button class="kb-action-btn" onclick="showOnboarding()">❓ Panduan</button>
+    <button class="kb-action-btn" onclick="showGlossary()">📖 Glosarium</button>
+    <a href="{{ $backRoute ?? route('home') }}" class="kb-action-btn">{{ $backLabel ?? '← Beranda' }}</a>
+  </div>
 </div>
 @elseif($konsep === 'inheritance')
 <div class="konsep-banner inh">
@@ -519,8 +497,11 @@ textarea.pred-input:focus{outline:none;border-color:var(--amber);}
     <div class="kb-title inh">Inheritance (Pewarisan)</div>
     <div class="kb-desc">Rancang class induk dengan atribut &amp; method, lalu buat class anak (<code style="font-family:var(--mono);font-size:11px;background:rgba(0,0,0,.3);padding:1px 5px;border-radius:3px;">class Anak(Induk)</code>) yang mewarisi dan memperluas fungsionalitasnya.</div>
   </div>
-  <button class="kb-guide" onclick="showOnboarding()">? Panduan</button>
-  <a href="{{ $backRoute ?? route('home') }}" class="kb-back">{{ $backLabel ?? '← Beranda' }}</a>
+  <div class="kb-actions">
+    <button class="kb-action-btn" onclick="showOnboarding()">❓ Panduan</button>
+    <button class="kb-action-btn" onclick="showGlossary()">📖 Glosarium</button>
+    <a href="{{ $backRoute ?? route('home') }}" class="kb-action-btn">{{ $backLabel ?? '← Beranda' }}</a>
+  </div>
 </div>
 @endif
 
@@ -666,6 +647,26 @@ textarea.pred-input:focus{outline:none;border-color:var(--amber);}
   </div>
   @endif
 
+  @if($konsep === 'inheritance')
+  <!-- ── Inheritance Test Panel ── -->
+  <div class="panel" id="inheritancePanel" style="margin-top:14px;">
+    <div class="panel-hdr">
+      <h3>🧬 Uji Pewarisan</h3>
+      <span style="font-size:11px;color:var(--faint);">pilih skenario → prediksi dulu, baru lihat jawaban</span>
+      <span id="inheritanceScoreBadge" style="margin-left:auto;font-size:11.5px;font-family:var(--mono);color:var(--dim);background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:3px 10px;flex-shrink:0;">Skor Nalar: 0/0</span>
+    </div>
+    <div class="panel-body" id="inheritanceScenarioList"></div>
+  </div>
+
+  <!-- Modal hasil uji pewarisan -->
+  <div id="inheritanceModal" class="acc-modal" onclick="closeInheritanceModal()">
+    <div class="acc-modal-box" onclick="event.stopPropagation()">
+      <div id="inheritanceModalContent"></div>
+      <button onclick="closeInheritanceModal()" class="btn btn-ghost" style="margin-top:14px;width:100%;justify-content:center;">Mengerti ✓</button>
+    </div>
+  </div>
+  @endif
+
   <div class="phase1-footer">
     <button class="btn-add-cls" onclick="addClass()">＋ Tambah Class Lain</button>
     <div style="flex:1;"></div>
@@ -750,7 +751,13 @@ textarea.pred-input:focus{outline:none;border-color:var(--amber);}
       <h2 id="simTitle">Simulasi aktif</h2>
       <p style="font-size:12px;color:var(--dim);" id="simSubtitle"></p>
     </div>
-    <button class="btn btn-ghost" onclick="goPhase(2)" style="margin-left:auto;">← Edit Kode</button>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+      <button id="floatPrev" class="cbtn" title="Langkah sebelumnya (←)"
+              onclick="if(!this.disabled) document.getElementById('btnPrev').click()">‹</button>
+      <button id="floatNext" class="cbtn" title="Langkah berikutnya (→)"
+              onclick="if(!this.disabled) document.getElementById('btnNext').click()">›</button>
+      <button class="btn btn-ghost" onclick="goPhase(2)">← Edit Kode</button>
+    </div>
   </div>
 
   <div class="sim-grid">
@@ -860,8 +867,7 @@ textarea.pred-input:focus{outline:none;border-color:var(--amber);}
   </div>
 </div>
 
-<!-- ── Glossary FAB + Modal ──────────────────────────────── -->
-<button class="glossary-fab" onclick="showGlossary()">📖 Glosarium OOP</button>
+<!-- ── Glossary Modal (trigger dipindah ke header, gabung dgn Panduan/Dashboard) ── -->
 <div id="glossaryModal" class="glossary-modal" onclick="if(event.target===this)closeGlossary()">
   <div class="glossary-box">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
@@ -879,10 +885,6 @@ textarea.pred-input:focus{outline:none;border-color:var(--amber);}
 </div>{{-- /flex min-h-screen --}}
 
 <div id="toast"></div>
-<button id="floatPrev" title="Langkah sebelumnya (←)"
-        onclick="if(!this.disabled) document.getElementById('btnPrev').click()">‹</button>
-<button id="floatNext" title="Langkah berikutnya (→)"
-        onclick="if(!this.disabled) document.getElementById('btnNext').click()">›</button>
 <button id="floatLanjut" onclick="submitLanjutFase()">
   Selesai — <span id="floatLanjutLabel"></span>
   <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -1087,6 +1089,7 @@ function renderEditor() {
   });
 
   renderAccessPanel();
+  renderInheritancePanel();
 }
 
 function escHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -1518,14 +1521,14 @@ function validateEnkapsulasi() {
     }
   }
 
-  // Step 3 — must have operational methods: setor AND tarik (bukan setSaldo)
-  const hasSetor = methNames.some(n => n === 'setor' || n.startsWith('setor_'));
-  const hasTarik = methNames.some(n => n === 'tarik' || n.startsWith('tarik_'));
-  if (!hasSetor || !hasTarik) {
-    const missing = [!hasSetor && 'setor()', !hasTarik && 'tarik()'].filter(Boolean).join(' dan ');
+  // Step 3 — must have at least one operational method selain getter/setter
+  // (generik: tidak wajib bernama setor/tarik — cocok untuk domain apa pun)
+  const methodOperasional = methNames.filter(n => !n.startsWith('get_') && !n.startsWith('set_'));
+  if (methodOperasional.length === 0) {
+    const attrName = privAttrs[0].name;
     return {
       ok: false,
-      msg: `❌ Validasi Gagal: Untuk mengamankan saldo, gunakan method get_saldo(), setor(), dan tarik(). Belum ada: ${missing}.`
+      msg: `❌ Validasi Gagal: Tambahkan minimal 1 method operasional (selain getter/setter) untuk mengelola atribut ${attrName} secara aman — contoh: method yang memvalidasi atau memproses perubahan data.`
     };
   }
 
@@ -1760,6 +1763,115 @@ function closeAccModal() {
   document.getElementById('accModal').classList.remove('open');
 }
 
+/* ══════════════════════════════════════════════════════════════
+   UJI PEWARISAN (Pertemuan 2 — konsep inheritance)
+   Skenario tetap berdasarkan preset "Karakter Gim RPG". Arsitektur
+   identik dengan Uji Access Modifier di atas, state & fungsi terpisah.
+══════════════════════════════════════════════════════════════ */
+const inheritanceScenarios = [
+  { id: 1,
+    pertanyaan: "hero1.info() dipanggil — method siapa yang jalan?",
+    opsi: [
+      { key: 'hero', label: "Method info() milik Hero" },
+      { key: 'karakter', label: "Method info() milik Karakter" },
+      { key: 'both', label: "Keduanya dijalankan berurutan" }
+    ],
+    kunci: 'hero',
+    penjelasan: "Karena Hero meng-override method info(), Python akan menjalankan versi milik Hero, bukan versi asli dari Karakter. Ini contoh polimorfisme — objek Hero punya perilaku sendiri meski mewarisi dari Karakter."
+  },
+  { id: 2,
+    pertanyaan: "monster1.info() dipanggil — method siapa yang jalan?",
+    opsi: [
+      { key: 'monster', label: "Method info() milik Monster" },
+      { key: 'karakter', label: "Method info() milik Karakter" },
+      { key: 'hero', label: "Method info() milik Hero" }
+    ],
+    kunci: 'monster',
+    penjelasan: "Monster juga meng-override info() dengan versinya sendiri (berbeda dari Hero). Setiap subclass bisa punya implementasi override yang berbeda-beda, meski nama method-nya sama."
+  },
+  { id: 3,
+    pertanyaan: "hero1.nama diakses — apakah berhasil, padahal Hero tidak mendefinisikan atribut nama sendiri?",
+    opsi: [
+      { key: 'berhasil', label: "Berhasil, nilai berasal dari Karakter lewat super().__init__()" },
+      { key: 'gagal', label: "Gagal, karena Hero tidak punya atribut nama sendiri" },
+      { key: 'error', label: "Error, atribut harus didefinisikan ulang di tiap subclass" }
+    ],
+    kunci: 'berhasil',
+    penjelasan: "Atribut nama dan nyawa didefinisikan di Karakter dan diwariskan ke Hero lewat pemanggilan super().__init__() di constructor Hero — jadi Hero otomatis punya kedua atribut itu tanpa perlu mendefinisikan ulang."
+  },
+  { id: 4,
+    pertanyaan: "Objek Karakter biasa (bukan Hero/Monster) memanggil .info() — apa yang terjadi?",
+    opsi: [
+      { key: 'asli', label: "Menjalankan info() versi asli milik Karakter, tidak terpengaruh Hero/Monster" },
+      { key: 'error', label: "Error, karena Karakter tidak boleh diinstansiasi langsung" },
+      { key: 'hero', label: "Menjalankan versi Hero secara default" }
+    ],
+    kunci: 'asli',
+    penjelasan: "Override di subclass (Hero/Monster) tidak mengubah method asli di class induk. Objek Karakter murni tetap menjalankan info() versi aslinya sendiri."
+  }
+];
+
+let inheritanceAttempts = {};
+
+function renderInheritancePanel() {
+  if (window.KONSEP !== 'inheritance') return;
+  const container = document.getElementById('inheritanceScenarioList');
+  if (!container) return;
+
+  container.innerHTML = inheritanceScenarios.map(s => {
+    const sudahDiuji = !!inheritanceAttempts[s.id];
+    const checkSpan  = sudahDiuji ? ` <span style="color:var(--green);font-size:11px;vertical-align:middle;font-weight:700;">✓</span>` : '';
+    return `
+      <div class="access-attr-row">
+        <span class="acc-name">${s.pertanyaan}${checkSpan}</span>
+        <button class="btn btn-ghost" style="padding:4px 12px;font-size:11.5px;margin-left:auto;" onclick="openInheritanceModal(${s.id})">Uji Prediksimu →</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function openInheritanceModal(scenarioId) {
+  const s = inheritanceScenarios.find(x => x.id === scenarioId);
+  document.getElementById('inheritanceModalContent').innerHTML = `
+    <div style="text-align:center;font-size:30px;line-height:1;margin-bottom:12px;">🤔</div>
+    <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;">Prediksi dulu!</div>
+    <p style="font-size:13px;color:var(--dim);margin-bottom:18px;line-height:1.6;">${s.pertanyaan}</p>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      ${s.opsi.map(o => `<button class="btn" style="justify-content:flex-start;" onclick="submitInheritancePrediction(${scenarioId},'${o.key}')">${o.label}</button>`).join('')}
+    </div>
+  `;
+  document.getElementById('inheritanceModal').classList.add('open');
+}
+
+function submitInheritancePrediction(scenarioId, jawabanDipilih) {
+  const s = inheritanceScenarios.find(x => x.id === scenarioId);
+  const isCorrect = jawabanDipilih === s.kunci;
+
+  if (!inheritanceAttempts[scenarioId]) {
+    inheritanceAttempts[scenarioId] = { jawabanDipilih, isCorrect };
+    updateInheritanceScoreBadge();
+  }
+
+  document.getElementById('inheritanceModalContent').innerHTML = `
+    <div class="acc-predict-banner ${isCorrect ? 'correct' : 'incorrect'}">${isCorrect ? '🎯 Prediksimu TEPAT!' : '🤔 Prediksimu belum tepat — pelajari penjelasannya:'}</div>
+    <div class="acc-result-box">
+      <div class="acc-result-msg">${s.penjelasan}</div>
+    </div>
+  `;
+  renderInheritancePanel();
+}
+
+function updateInheritanceScoreBadge() {
+  const vals    = Object.values(inheritanceAttempts);
+  const correct = vals.filter(v => v.isCorrect).length;
+  const badge   = document.getElementById('inheritanceScoreBadge');
+  if (badge) badge.textContent = `Skor Nalar: ${correct}/${vals.length}`;
+}
+
+function closeInheritanceModal() {
+  document.getElementById('inheritanceModal').classList.remove('open');
+}
+
 function showPubWarn(attrName) {
   const modal = document.getElementById('accModal');
   if (!modal) return;
@@ -1912,6 +2024,13 @@ async function jalankanSimulasi() {
       headers: { 'Content-Type':'application/json', 'X-CSRF-TOKEN': window.CSRF },
       body: JSON.stringify({ kode_python: code })
     });
+
+    if (resp.status === 419) {
+      errDiv.innerHTML = '⚠ Sesi kamu sudah berakhir karena terlalu lama tidak aktif. <a href="javascript:location.reload()" style="text-decoration:underline;font-weight:600;">Klik di sini untuk muat ulang halaman</a>, lalu coba lagi (pekerjaanmu yang sudah tersimpan tidak akan hilang).';
+      errDiv.style.display = 'block';
+      return;
+    }
+
     const check = await resp.json();
     if (!check.boleh) throw new Error(check.pesan);
 
@@ -3006,6 +3125,28 @@ if (window.KONSEP === 'enkapsulasi') {
   kucing.meths  = [{id:'m2', vis:'pub', name:'bersuara', params:'', ret:'str'}];
   classes = [classes[0], kucing];
   activeId = kucing.id;
+
+} else if (window.KONSEP === 'gabungan') {
+  // Gabungan example: AkunSekolah (induk) → Guru (anak) — sama persis dengan
+  // preset 'school_management' di PRESETS.gabungan (baris ~2724)
+  classes[0] = newClass('AkunSekolah');
+  classes[0].attrs = [
+    {id:'a1', vis:'pub',  name:'nama',     type:'str'},
+    {id:'a2', vis:'priv', name:'password', type:'str'},
+  ];
+  classes[0].meths = [
+    {id:'m1', vis:'pub', name:'get_password', params:'',              ret:'str'},
+    {id:'m2', vis:'pub', name:'set_password', params:'password_baru', ret:''},
+    {id:'m3', vis:'pub', name:'login',        params:'input_pw',      ret:''},
+  ];
+
+  const guru = newClass('Guru');
+  guru.parentId = classes[0].id;
+  guru.parent   = 'AkunSekolah';
+  guru.attrs  = [{id:'a3', vis:'pub', name:'mata_pelajaran', type:'str'}];
+  guru.meths  = [{id:'m4', vis:'pub', name:'info', params:'', ret:''}];
+  classes = [classes[0], guru];
+  activeId = guru.id;
 
 } else {
   // Default / generic example: Kendaraan → Motor

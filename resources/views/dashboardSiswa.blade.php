@@ -29,6 +29,13 @@
 
         <div class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
 
+            @if(session('lock_message'))
+            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 flex gap-3">
+                <span class="text-amber-500 text-xl">🔒</span>
+                <p class="text-amber-800 text-sm font-medium">{{ session('lock_message') }}</p>
+            </div>
+            @endif
+
             {{-- Welcome Header --}}
             <div id="tour-welcome" class="relative rounded-2xl overflow-hidden mb-6"
                  style="background: linear-gradient(135deg, #16a34a 0%, #15803d 40%, #166534 100%);">
@@ -61,7 +68,12 @@
                             </div>
 
                             <div class="mt-5">
-                                @if($totalDone >= 15)
+                                @if(!$progress->pretestSelesai())
+                                    <a href="{{ route('pretest') }}"
+                                       class="inline-flex items-center gap-2 bg-white text-green-700 hover:bg-green-50 font-bold text-sm px-5 py-2.5 rounded-xl transition shadow-sm">
+                                        Kerjakan Pretest →
+                                    </a>
+                                @elseif($totalDone >= 15)
                                     <a href="{{ route('grade') }}"
                                        class="inline-flex items-center gap-2 bg-white text-green-700 hover:bg-green-50 font-bold text-sm px-5 py-2.5 rounded-xl transition shadow-sm">
                                         Lihat Hasil Belajar →

@@ -8,5 +8,5 @@ class Reflection extends Model
 {
     protected $table = 'reflections';
 
-    protected $fillable = ['user_id', 'jawaban', 'refleksi', 'tingkat_ketepatan'];
+    protected $fillable = ['user_id', 'pertemuan', 'jawaban', 'refleksi', 'tingkat_ketepatan'];
 }
