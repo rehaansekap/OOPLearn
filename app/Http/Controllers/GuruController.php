@@ -62,11 +62,11 @@ class GuruController extends Controller
     {
         $data = $request->validate([
             'type'     => 'required|in:pretest,posttest',
-            'question' => 'required|string|max:500',
-            'option_a' => 'required|string|max:300',
-            'option_b' => 'required|string|max:300',
-            'option_c' => 'required|string|max:300',
-            'option_d' => 'required|string|max:300',
+            'question' => 'required|string|max:10000',
+            'option_a' => 'required|string|max:5000',
+            'option_b' => 'required|string|max:5000',
+            'option_c' => 'required|string|max:5000',
+            'option_d' => 'required|string|max:5000',
             'answer'   => 'required|in:A,B,C,D',
         ]);
 
@@ -81,11 +81,11 @@ class GuruController extends Controller
     public function updateQuestion(Request $request, AssessmentQuestion $question)
     {
         $data = $request->validate([
-            'question' => 'required|string|max:500',
-            'option_a' => 'required|string|max:300',
-            'option_b' => 'required|string|max:300',
-            'option_c' => 'required|string|max:300',
-            'option_d' => 'required|string|max:300',
+            'question' => 'required|string|max:10000',
+            'option_a' => 'required|string|max:5000',
+            'option_b' => 'required|string|max:5000',
+            'option_c' => 'required|string|max:5000',
+            'option_d' => 'required|string|max:5000',
             'answer'   => 'required|in:A,B,C,D',
         ]);
 

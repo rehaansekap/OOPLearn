@@ -14,7 +14,7 @@ class Fase5Controller extends Controller
         $data = $request->validate([
             'pertemuan'         => 'nullable|in:1,2,3',
             'jawaban'           => 'required|in:A,B,C,D,E',
-            'refleksi'          => 'required|string|max:2000',
+            'refleksi'          => 'required|string|max:10000',
             'tingkat_ketepatan' => 'required|in:sangat_berbeda,sebagian_tepat,sangat_tepat',
         ]);
 

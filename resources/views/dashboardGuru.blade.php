@@ -687,6 +687,22 @@
                 </div>
                 @endif
 
+                @if($errors->any())
+                <div class="mb-5 bg-red-50 border border-red-200 text-red-800 px-5 py-3.5 rounded-2xl text-sm font-semibold flex flex-col gap-1">
+                    <div class="flex items-center gap-2 text-red-600 font-bold">
+                        <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>Gagal Menyimpan Soal:</span>
+                    </div>
+                    <ul class="list-disc list-inside text-xs text-red-700 pl-7 space-y-0.5">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+
                 {{-- Tab switcher --}}
                 <div class="flex gap-2 mb-6 bg-gray-100 p-1 rounded-xl w-fit">
                     <button @click="tab='pretest'; adding=false; editingId=null"
@@ -786,15 +802,15 @@
                                     <div class="space-y-3">
                                         <div>
                                             <label class="block text-xs font-semibold text-gray-600 mb-1">Pertanyaan</label>
-                                            <input type="text" name="question" x-model="editData.question"
-                                                   class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm bg-white outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition">
+                                            <textarea name="question" rows="3" x-model="editData.question"
+                                                      class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm bg-white outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition"></textarea>
                                         </div>
                                         <div class="grid grid-cols-2 gap-3">
                                             @foreach(['a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D'] as $lc => $uc)
                                             <div>
                                                 <label class="block text-xs font-semibold text-gray-600 mb-1">Pilihan {{ $uc }}</label>
-                                                <input type="text" name="option_{{ $lc }}" x-model="editData.option_{{ $lc }}"
-                                                       class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm bg-white outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition">
+                                                <textarea name="option_{{ $lc }}" rows="2" x-model="editData.option_{{ $lc }}"
+                                                          class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm bg-white outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition"></textarea>
                                             </div>
                                             @endforeach
                                         </div>
@@ -845,15 +861,15 @@
                                 <input type="hidden" name="type" value="pretest">
                                 <div>
                                     <label class="block text-xs font-semibold text-gray-600 mb-1">Pertanyaan</label>
-                                    <input type="text" name="question" required placeholder="Tulis pertanyaan di sini..."
-                                           class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition">
+                                    <textarea name="question" rows="3" required placeholder="Tulis pertanyaan di sini..."
+                                              class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition"></textarea>
                                 </div>
                                 <div class="grid grid-cols-2 gap-3">
                                     @foreach(['a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D'] as $lc => $uc)
                                     <div>
                                         <label class="block text-xs font-semibold text-gray-600 mb-1">Pilihan {{ $uc }}</label>
-                                        <input type="text" name="option_{{ $lc }}" required placeholder="Pilihan {{ $uc }}"
-                                               class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition">
+                                        <textarea name="option_{{ $lc }}" rows="2" required placeholder="Pilihan {{ $uc }}"
+                                                  class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition"></textarea>
                                     </div>
                                     @endforeach
                                 </div>
@@ -965,15 +981,15 @@
                                     <div class="space-y-3">
                                         <div>
                                             <label class="block text-xs font-semibold text-gray-600 mb-1">Pertanyaan</label>
-                                            <input type="text" name="question" x-model="editData.question"
-                                                   class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm bg-white outline-none focus:border-green-400 focus:ring-2 focus:ring-green-100 transition">
+                                            <textarea name="question" rows="3" x-model="editData.question"
+                                                      class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm bg-white outline-none focus:border-green-400 focus:ring-2 focus:ring-green-100 transition"></textarea>
                                         </div>
                                         <div class="grid grid-cols-2 gap-3">
                                             @foreach(['a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D'] as $lc => $uc)
                                             <div>
                                                 <label class="block text-xs font-semibold text-gray-600 mb-1">Pilihan {{ $uc }}</label>
-                                                <input type="text" name="option_{{ $lc }}" x-model="editData.option_{{ $lc }}"
-                                                       class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm bg-white outline-none focus:border-green-400 focus:ring-2 focus:ring-green-100 transition">
+                                                <textarea name="option_{{ $lc }}" rows="2" x-model="editData.option_{{ $lc }}"
+                                                          class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm bg-white outline-none focus:border-green-400 focus:ring-2 focus:ring-green-100 transition"></textarea>
                                             </div>
                                             @endforeach
                                         </div>
@@ -1024,15 +1040,15 @@
                                 <input type="hidden" name="type" value="posttest">
                                 <div>
                                     <label class="block text-xs font-semibold text-gray-600 mb-1">Pertanyaan</label>
-                                    <input type="text" name="question" required placeholder="Tulis pertanyaan di sini..."
-                                           class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50 outline-none focus:bg-white focus:border-green-400 focus:ring-2 focus:ring-green-100 transition">
+                                    <textarea name="question" rows="3" required placeholder="Tulis pertanyaan di sini..."
+                                              class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50 outline-none focus:bg-white focus:border-green-400 focus:ring-2 focus:ring-green-100 transition"></textarea>
                                 </div>
                                 <div class="grid grid-cols-2 gap-3">
                                     @foreach(['a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D'] as $lc => $uc)
                                     <div>
                                         <label class="block text-xs font-semibold text-gray-600 mb-1">Pilihan {{ $uc }}</label>
-                                        <input type="text" name="option_{{ $lc }}" required placeholder="Pilihan {{ $uc }}"
-                                               class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50 outline-none focus:bg-white focus:border-green-400 focus:ring-2 focus:ring-green-100 transition">
+                                        <textarea name="option_{{ $lc }}" rows="2" required placeholder="Pilihan {{ $uc }}"
+                                                  class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm bg-gray-50 outline-none focus:bg-white focus:border-green-400 focus:ring-2 focus:ring-green-100 transition"></textarea>
                                     </div>
                                     @endforeach
                                 </div>

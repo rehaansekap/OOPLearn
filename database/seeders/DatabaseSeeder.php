@@ -20,6 +20,11 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        $this->call(AssessmentSeeder::class);
+        $this->call([
+            GuruSeeder::class,
+            AssessmentSeeder::class,
+            MateriSeeder::class,
+            SkenarioSeeder::class,
+        ]);
     }
 }

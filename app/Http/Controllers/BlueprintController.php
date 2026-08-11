@@ -78,9 +78,9 @@ class BlueprintController extends Controller
     {
         $validated = $request->validate([
             'blueprint_json' => 'required|json',
-            'kode_python'    => 'required|string|max:5000',
+            'kode_python'    => 'required|string|max:50000',
             'nama_siswa'     => 'nullable|string|max:100',
-            'prediksi_awal'  => 'nullable|string|max:500',
+            'prediksi_awal'  => 'nullable|string|max:5000',
         ]);
 
         $token = Str::random(12);

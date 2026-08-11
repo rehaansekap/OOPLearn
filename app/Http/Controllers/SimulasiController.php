@@ -23,7 +23,7 @@ class SimulasiController extends Controller
     public function jalankan(Request $request)
     {
         $validated = $request->validate([
-            'kode_python' => 'required|string|max:5000',
+            'kode_python' => 'required|string|max:50000',
             'sesi_id'     => 'nullable|string|max:64',
         ]);
 
@@ -54,7 +54,7 @@ class SimulasiController extends Controller
         $validated = $request->validate([
             'token'       => 'required|string|max:20|exists:hasil_siswas,token',
             'prediksi'    => 'nullable|array',
-            'refleksi'    => 'nullable|string|max:1000',
+            'refleksi'    => 'nullable|string|max:10000',
             'jumlah_step' => 'nullable|integer',
             'durasi_detik'=> 'nullable|integer',
         ]);
