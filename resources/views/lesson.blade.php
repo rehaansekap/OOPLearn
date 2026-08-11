@@ -185,7 +185,7 @@
             @endif
 
             <div class="flex justify-end pt-4 border-t border-gray-100">
-                <a href="{{ route('fase1') }}"
+                <a href="{{ $mulaiRoute }}"
                    class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm px-6 py-3 rounded-xl transition active:scale-95 shadow-sm">
                     Mulai Aktivitas
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">

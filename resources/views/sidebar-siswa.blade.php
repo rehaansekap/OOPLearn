@@ -1,3 +1,7 @@
+@php
+    $progress = \App\Models\LearningProgress::firstOrCreate(['user_id' => auth()->id()]);
+@endphp
+
 {{-- Mobile backdrop --}}
 <div x-show="sidebarOpen" x-cloak
      @click="sidebarOpen = false"
@@ -128,12 +132,13 @@
                     </summary>
                     <div class="mt-0.5 ml-4 space-y-0.5">
                         @foreach([
-                            ['fase1','Fase 1 – Orientasi'],
-                            ['fase2','Fase 2 – Pencetusan Ide'],
-                            ['fase3','Fase 3 – Penstrukturan'],
-                            ['fase4','Fase 4 – Aplikasi'],
-                            ['fase5','Fase 5 – Refleksi'],
-                        ] as [$r, $l])
+                            ['fase1','Fase 1 – Orientasi', 1, 1],
+                            ['fase2','Fase 2 – Pencetusan Ide', 1, 2],
+                            ['fase3','Fase 3 – Penstrukturan', 1, 3],
+                            ['fase4','Fase 4 – Aplikasi', 1, 4],
+                            ['fase5','Fase 5 – Refleksi', 1, 5],
+                        ] as [$r, $l, $pert, $fs])
+                        @if($progress->isFaseUnlocked($pert, $fs))
                         <a href="{{ route($r) }}"
                            class="flex items-center gap-1.5 text-[11.5px] py-1 px-2 rounded-lg transition truncate
                                   {{ request()->routeIs($r)
@@ -143,6 +148,12 @@
                                          {{ request()->routeIs($r) ? 'bg-green-500' : 'bg-gray-300' }}"></span>
                             {{ $l }}
                         </a>
+                        @else
+                        <span class="flex items-center gap-1.5 text-[11.5px] py-1 px-2 rounded-lg truncate opacity-40 cursor-not-allowed text-gray-500">
+                            <span class="w-1 h-1 rounded-full flex-shrink-0 bg-gray-300"></span>
+                            {{ $l }} 🔒
+                        </span>
+                        @endif
                         @endforeach
                     </div>
                 </details>
@@ -161,12 +172,13 @@
                     </summary>
                     <div class="mt-0.5 ml-4 space-y-0.5">
                         @foreach([
-                            ['p2.fase1','Fase 1 – Orientasi'],
-                            ['p2.fase2','Fase 2 – Pencetusan Ide'],
-                            ['p2.fase3','Fase 3 – Penstrukturan'],
-                            ['p2.fase4','Fase 4 – Aplikasi'],
-                            ['p2.fase5','Fase 5 – Refleksi'],
-                        ] as [$r, $l])
+                            ['p2.fase1','Fase 1 – Orientasi', 2, 1],
+                            ['p2.fase2','Fase 2 – Pencetusan Ide', 2, 2],
+                            ['p2.fase3','Fase 3 – Penstrukturan', 2, 3],
+                            ['p2.fase4','Fase 4 – Aplikasi', 2, 4],
+                            ['p2.fase5','Fase 5 – Refleksi', 2, 5],
+                        ] as [$r, $l, $pert, $fs])
+                        @if($progress->isFaseUnlocked($pert, $fs))
                         <a href="{{ route($r) }}"
                            class="flex items-center gap-1.5 text-[11.5px] py-1 px-2 rounded-lg transition truncate
                                   {{ request()->routeIs($r)
@@ -176,6 +188,12 @@
                                          {{ request()->routeIs($r) ? 'bg-blue-500' : 'bg-gray-300' }}"></span>
                             {{ $l }}
                         </a>
+                        @else
+                        <span class="flex items-center gap-1.5 text-[11.5px] py-1 px-2 rounded-lg truncate opacity-40 cursor-not-allowed text-gray-500">
+                            <span class="w-1 h-1 rounded-full flex-shrink-0 bg-gray-300"></span>
+                            {{ $l }} 🔒
+                        </span>
+                        @endif
                         @endforeach
                     </div>
                 </details>
@@ -194,12 +212,13 @@
                     </summary>
                     <div class="mt-0.5 ml-4 space-y-0.5">
                         @foreach([
-                            ['p3.fase1','Fase 1 – Orientasi'],
-                            ['p3.fase2','Fase 2 – Pencetusan Ide'],
-                            ['p3.fase3','Fase 3 – Penstrukturan'],
-                            ['p3.fase4','Fase 4 – Aplikasi'],
-                            ['p3.fase5','Fase 5 – Refleksi'],
-                        ] as [$r, $l])
+                            ['p3.fase1','Fase 1 – Orientasi', 3, 1],
+                            ['p3.fase2','Fase 2 – Pencetusan Ide', 3, 2],
+                            ['p3.fase3','Fase 3 – Penstrukturan', 3, 3],
+                            ['p3.fase4','Fase 4 – Aplikasi', 3, 4],
+                            ['p3.fase5','Fase 5 – Refleksi', 3, 5],
+                        ] as [$r, $l, $pert, $fs])
+                        @if($progress->isFaseUnlocked($pert, $fs))
                         <a href="{{ route($r) }}"
                            class="flex items-center gap-1.5 text-[11.5px] py-1 px-2 rounded-lg transition truncate
                                   {{ request()->routeIs($r)
@@ -209,6 +228,12 @@
                                          {{ request()->routeIs($r) ? 'bg-purple-500' : 'bg-gray-300' }}"></span>
                             {{ $l }}
                         </a>
+                        @else
+                        <span class="flex items-center gap-1.5 text-[11.5px] py-1 px-2 rounded-lg truncate opacity-40 cursor-not-allowed text-gray-500">
+                            <span class="w-1 h-1 rounded-full flex-shrink-0 bg-gray-300"></span>
+                            {{ $l }} 🔒
+                        </span>
+                        @endif
                         @endforeach
                     </div>
                 </details>

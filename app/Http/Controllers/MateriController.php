@@ -3,15 +3,34 @@
 namespace App\Http\Controllers;
 
 use App\Models\Materi;
+use App\Models\LearningProgress;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class MateriController extends Controller
 {
     public function showLesson()
     {
+        $progress = LearningProgress::firstOrCreate(['user_id' => Auth::id()]);
+        if (!$progress->materiUnlocked()) {
+            $p = $progress->pertemuanAktif();
+            return redirect()->route('dashboard.siswa')
+                ->with('lock_message', "Selesaikan Fase 1 dan 2 Pertemuan {$p} dulu sebelum membuka Materi.");
+        }
+
+        // "Mulai Aktivitas" harus mengarah ke fase siswa yang sesungguhnya sedang
+        // dikerjakan, bukan selalu Fase 1 Pertemuan 1 — supaya siswa P2/P3 yang
+        // buka Materi di tengah jalan tidak terlempar balik ke awal.
+        $pertemuanAktif = $progress->pertemuanAktif();
+        $nextFase       = $progress->nextIncompleteFase($pertemuanAktif);
+        $mulaiRoute     = $pertemuanAktif === 1
+            ? route("fase{$nextFase}")
+            : route("p{$pertemuanAktif}.fase{$nextFase}");
+
         return view('lesson', [
-            'materis' => Materi::orderBy('sort_order')->get(),
+            'materis'    => Materi::orderBy('sort_order')->get(),
+            'mulaiRoute' => $mulaiRoute,
         ]);
     }
 

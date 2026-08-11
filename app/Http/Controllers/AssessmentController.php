@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\StudentScore;
 use App\Models\AssessmentQuestion;
 use App\Models\AssessmentSetting;
+use App\Models\LearningProgress;
 
 class AssessmentController extends Controller
 {
@@ -20,6 +21,12 @@ class AssessmentController extends Controller
 
     public function showPosttest()
     {
+        $progress = LearningProgress::firstOrCreate(['user_id' => Auth::id()]);
+        if (!$progress->semuaPertemuanSelesai()) {
+            return redirect()->route('dashboard.siswa')
+                ->with('lock_message', 'Selesaikan seluruh 3 Pertemuan (15 fase) dulu sebelum mengerjakan Posttest.');
+        }
+
         return view('posttest', [
             'questions' => AssessmentQuestion::where('type', 'posttest')->orderBy('number')->get(),
             'timeLimit' => AssessmentSetting::timeLimitFor('posttest'),
